@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pejay Paronable — Mobile & Web Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #05060a;
+    --panel: #0d0f15;
+    --line: rgba(255,255,255,0.08);
+    --line-hi: rgba(255,255,255,0.16);
+    --text: #f4f5f8;
+    --muted: #8b90a0;
+    --glow: #5b8cff;
+    --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  .wrap { width: min(1200px, 100% - 32px); margin: 0 auto; }
+  .mono { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; }
+  .muted { color: var(--muted); }
+
+  /* ambient light that follows the active app */
+  .ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(50% 45% at 50% 40%, color-mix(in srgb, var(--glow) 28%, transparent), transparent 70%);
+    transition: background 1s; }
+  .stars { position: fixed; inset: 0; z-index: -2; opacity: .4;
+    background-image: radial-gradient(1px 1px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 70% 80%, #fff, transparent), radial-gradient(1px 1px at 40% 70%, #fff, transparent), radial-gradient(1px 1px at 85% 20%, #fff, transparent), radial-gradient(1px 1px at 10% 85%, #fff, transparent);
+    background-size: 600px 600px; }
+
+  /* NAV */
+  nav { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 60; width: min(1200px, 100% - 24px);
+    display: flex; justify-content: space-between; align-items: center; padding: 10px 10px 10px 20px; border-radius: 18px;
+    background: rgba(13,15,21,.65); backdrop-filter: blur(18px) saturate(160%); border: 1px solid var(--line); }
+  .brand { font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .brand .app-ic { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #5b8cff, #b56bff); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+  .nav-links { display: flex; gap: 26px; font-size: 14px; color: var(--muted); }
+  .nav-links a:hover { color: var(--text); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 20px; border-radius: 13px; font-weight: 700; font-size: 14px; transition: transform .2s, opacity .2s, background .2s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.pri { background: var(--text); color: #000; }
+  .btn.sec { background: rgba(255,255,255,.06); border: 1px solid var(--line-hi); }
+  .btn.lg { height: 52px; padding: 0 26px; font-size: 15px; border-radius: 16px; }
+
+  /* ========== PHONE (shared) ========== */
+  .iphone {
+    position: relative; width: var(--w, 300px); aspect-ratio: 9/19.5; border-radius: calc(var(--w, 300px) * .16);
+    padding: calc(var(--w, 300px) * .035);
+    background: linear-gradient(145deg, #3a3d46, #121318 40%, #2a2c33);
+    box-shadow: 0 0 0 1.5px #4a4d57 inset, 0 50px 100px -30px rgba(0,0,0,.9), 0 30px 80px -40px var(--glow);
+    transform-style: preserve-3d;
+  }
+  .iphone::before, .iphone::after { content: ''; position: absolute; width: 3px; border-radius: 2px; background: #2c2e35; }
+  .iphone::before { left: -3px; top: 22%; height: 9%; box-shadow: 0 calc(var(--w,300px)*.14) 0 #2c2e35; }
+  .iphone::after { right: -3px; top: 28%; height: 13%; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: calc(var(--w, 300px) * .13); overflow: hidden; background: #000; }
+  .island { position: absolute; top: 2.2%; left: 50%; transform: translateX(-50%); width: 32%; height: 3.6%; border-radius: 99px; background: #000; z-index: 20; }
+  .sb { position: absolute; top: 0; left: 0; right: 0; z-index: 15; height: 7%; display: flex; justify-content: space-between; align-items: center; padding: 0 9% ; font-size: calc(var(--w,300px) * .045); font-weight: 700; }
+  .sb .r { display: flex; gap: 4px; align-items: center; }
+  .sb .r i { display: block; width: calc(var(--w,300px)*.07); height: calc(var(--w,300px)*.035); border-radius: 3px; border: 1.5px solid currentColor; position: relative; }
+  .sb .r i::after { content: ''; position: absolute; inset: 1.5px; right: 30%; background: currentColor; border-radius: 1px; }
+  .home-ind { position: absolute; bottom: 1.4%; left: 50%; transform: translateX(-50%); width: 36%; height: 4px; border-radius: 4px; background: rgba(255,255,255,.7); z-index: 20; }
+
+  /* app screens use em sizing relative to phone width */
+  .app { position: absolute; inset: 0; font-size: calc(var(--w, 300px) * .042); padding: 15% 6.5% 6%; display: flex; flex-direction: column; gap: .8em; }
+  .app img.shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .app h5 { font-size: 1.6em; font-weight: 800; letter-spacing: -0.03em; }
+  .app .sub { font-size: .8em; color: rgba(255,255,255,.55); }
+  .card-a { border-radius: 1em; padding: .9em; background: rgba(255,255,255,.07); }
+  .tabbar { margin-top: auto; height: 3.4em; border-radius: 1.4em; background: rgba(255,255,255,.08); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; }
+  .tabbar i { width: 1.1em; height: 1.1em; border-radius: .35em; background: rgba(255,255,255,.25); }
+  .tabbar i.on { background: var(--c); }
+
+  /* ========== HERO ========== */
+  .hero { min-height: 100vh; display: grid; align-items: center; padding: 120px 0 60px; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 40px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 8px; border-radius: 99px; background: rgba(255,255,255,.05); border: 1px solid var(--line); font-size: 13px; font-weight: 600; margin-bottom: 26px; }
+  .eyebrow b { background: #30d158; color: #000; font-size: 11px; padding: 3px 8px; border-radius: 99px; }
+  h1 { font-size: clamp(46px, 6.6vw, 92px); font-weight: 800; letter-spacing: -0.05em; line-height: .95; }
+  h1 .g { background: linear-gradient(100deg, #5b8cff, #b56bff 50%, #ff6b9d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { margin: 22px 0 32px; font-size: 19px; color: var(--muted); font-weight: 500; }
+  .lead b { color: var(--text); }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .store-row { display: flex; gap: 28px; margin-top: 46px; flex-wrap: wrap; }
+  .store-row div b { display: block; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+  .store-row div span { font-size: 13px; color: var(--muted); }
+
+  .hero-stage { position: relative; height: 640px; display: grid; place-items: center; perspective: 1400px; }
+  .hero-stage .iphone { --w: 290px; transform: rotateY(-16deg) rotateX(6deg); transition: transform .3s ease-out; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { translate: 0 -14px; } }
+  .orbit { position: absolute; z-index: 3; display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: 16px; font-size: 13px; font-weight: 700;
+    background: rgba(18,20,28,.75); backdrop-filter: blur(14px); border: 1px solid var(--line-hi); animation: float 5s ease-in-out infinite; white-space: nowrap; }
+  .orbit .ic { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-family: var(--mono); font-size: 11px; color: var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); }
+  .orbit small { display: block; font-size: 11px; color: var(--muted); font-weight: 500; }
+  .o1 { top: 14%; left: 0; } .o2 { top: 40%; right: -2%; animation-delay: -1.5s; } .o3 { bottom: 12%; left: 6%; animation-delay: -3s; }
+
+  /* profile app in hero phone */
+  .profile { background: linear-gradient(180deg, #1a1f3a, #07080d 60%); align-items: center; text-align: center; padding-top: 22%; }
+  .avatar { position: relative; width: 42%; aspect-ratio: 1; border-radius: 50%; padding: 3px; background: conic-gradient(#5b8cff, #b56bff, #ff6b9d, #5b8cff); }
+  .avatar > div { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #151826; display: grid; place-items: center; font-weight: 800; font-size: 2.2em; position: relative; }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .avatar::after { content: ''; position: absolute; right: 6%; bottom: 6%; width: 18%; height: 18%; border-radius: 50%; background: #30d158; border: 3px solid #07080d; }
+  .profile .nm { font-size: 1.45em; font-weight: 800; letter-spacing: -0.02em; margin-top: .3em; }
+  .pstats { display: flex; justify-content: space-around; width: 100%; padding: .8em 0; border-block: 1px solid rgba(255,255,255,.08); }
+  .pstats b { display: block; font-size: 1.2em; } .pstats span { font-size: .7em; color: rgba(255,255,255,.5); }
+  .pbtns { display: flex; gap: .5em; width: 100%; }
+  .pbtns span { flex: 1; padding: .75em 0; border-radius: .9em; font-weight: 700; font-size: .85em; background: rgba(255,255,255,.1); }
+  .pbtns span:first-child { background: #fff; color: #000; }
+  .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35em; width: 100%; }
+  .pgrid i { aspect-ratio: 1; border-radius: .6em; }
+
+  /* ========== SECTION HEAD ========== */
+  .sec-head { text-align: center; margin-bottom: 40px; }
+  .sec-head .mono { color: var(--glow); transition: color 1s; }
+  .sec-head h2 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; letter-spacing: -0.045em; line-height: 1; margin-top: 12px; }
+  .sec-head h2 span { color: var(--muted); }
+
+  /* ========== MOBILE SHOWCASE (scroll-driven) ========== */
+  .showcase { position: relative; }
+  .sticky { position: sticky; top: 0; height: 100vh; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 50px; width: min(1200px, 100% - 32px); margin: 0 auto; perspective: 1600px; }
+  .sc-head { position: absolute; top: 96px; left: 0; right: 0; text-align: center; }
+  .sc-head h2 { font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.04em; }
+  .sc-phone { --w: clamp(240px, 22vw, 300px); transition: transform .15s linear; }
+  .sc-phone .app { transition: transform .7s cubic-bezier(.2,.8,.2,1), opacity .7s; }
+
+  .info { position: relative; height: 320px; }
+  .info-item { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; opacity: 0; transform: translateY(24px); transition: .6s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+  .info-item.on { opacity: 1; transform: none; pointer-events: auto; }
+  .info-item .app-row { display: flex; align-items: center; gap: 14px; }
+  .info-item .app-icon { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; font-size: 28px; background: linear-gradient(135deg, var(--c), var(--c2)); box-shadow: 0 12px 30px -10px var(--c); }
+  .info-item h3 { font-size: 36px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .info-item .cat { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .rating { display: flex; gap: 22px; padding: 14px 0; border-block: 1px solid var(--line); }
+  .rating div b { display: block; font-size: 20px; font-weight: 800; } .rating div span { font-size: 11px; color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-family: var(--mono); font-size: 11px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid var(--line); color: #c9ccd6; }
+  .stores { display: flex; gap: 8px; }
+  .store { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px; border-radius: 12px; background: #fff; color: #000; font-size: 12px; font-weight: 700; }
+  .store.dark { background: rgba(255,255,255,.08); color: #fff; border: 1px solid var(--line-hi); }
+  .store svg { width: 16px; height: 16px; }
+
+  .list { display: flex; flex-direction: column; gap: 6px; justify-self: end; width: 100%; max-width: 280px; }
+  .list button { text-align: left; padding: 14px 16px; border-radius: 16px; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; color: var(--muted); transition: background .3s, color .3s; position: relative; overflow: hidden; }
+  .list button .mi { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 17px; background: rgba(255,255,255,.05); }
+  .list button b { font-size: 15px; display: block; } .list button small { font-size: 12px; }
+  .list button.on { background: rgba(255,255,255,.06); color: var(--text); }
+  .list button.on .mi { background: linear-gradient(135deg, var(--c), var(--c2)); }
+  .list button .prog { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--c); width: 0; }
+  .dots { display: none; }
+
+  /* --- app screen designs --- */
+  /* fitness */
+  .s-fit { background: #000; }
+  .rings { display: grid; place-items: center; padding: .4em 0; }
+  .rings svg { width: 62%; }
+  .rings circle { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; }
+  .two .card-a b { display: block; font-size: 1.35em; letter-spacing: -0.02em; } .two .card-a span { font-size: .72em; color: rgba(255,255,255,.55); }
+  .bars { display: flex; align-items: flex-end; gap: .35em; height: 3.6em; }
+  .bars i { flex: 1; border-radius: .3em; background: var(--c); opacity: .35; } .bars i.hi { opacity: 1; }
+  /* ride */
+  .s-ride { padding: 0; background: #11141c; }
+  .map { position: absolute; inset: 0; background:
+      linear-gradient(90deg, transparent 47%, #232838 47%, #232838 53%, transparent 53%) 0 0 / 34% 100%,
+      linear-gradient(0deg, transparent 47%, #232838 47%, #232838 53%, transparent 53%) 0 0 / 100% 22%, #161a24; }
+  .map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .map .route { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 10 8; animation: dash 1.2s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -36; } }
+  .sheet { position: absolute; left: 4%; right: 4%; bottom: 3.5%; border-radius: 1.6em; background: #1c2030; padding: 1em; display: grid; gap: .7em; z-index: 2; }
+  .sheet .grab { width: 2.6em; height: .3em; border-radius: 9px; background: rgba(255,255,255,.2); justify-self: center; }
+  .driver { display: flex; align-items: center; gap: .7em; }
+  .driver i { width: 2.6em; height: 2.6em; border-radius: 50%; background: linear-gradient(135deg, var(--c), var(--c2)); }
+  .driver b { font-size: .95em; } .driver span { display: block; font-size: .72em; color: rgba(255,255,255,.55); }
+  .driver em { margin-left: auto; font-style: normal; font-weight: 800; }
+  .cta-a { text-align: center; padding: .85em; border-radius: 1em; background: var(--c); color: #000; font-weight: 800; font-size: .9em; }
+  /* food */
+  .s-food { background: #0e0b09; }
+  .search { padding: .75em 1em; border-radius: 1em; background: rgba(255,255,255,.07); font-size: .8em; color: rgba(255,255,255,.45); }
+  .pills { display: flex; gap: .4em; } .pills span { padding: .45em .8em; border-radius: 99px; font-size: .72em; background: rgba(255,255,255,.07); } .pills span:first-child { background: var(--c); color: #000; font-weight: 700; }
+  .dish { border-radius: 1.1em; overflow: hidden; background: rgba(255,255,255,.06); }
+  .dish .img { height: 5.6em; background: radial-gradient(circle at 40% 45%, var(--c2) 0 22%, transparent 23%), radial-gradient(circle at 62% 55%, var(--c) 0 18%, transparent 19%), linear-gradient(135deg, #3a2516, #1b120c); }
+  .dish .t { display: flex; justify-content: space-between; padding: .6em .8em; font-size: .85em; font-weight: 700; } .dish .t span { color: var(--c); }
+  /* chat */
+  .s-chat { background: #0a0d12; }
+  .chat-h { display: flex; align-items: center; gap: .6em; padding-bottom: .7em; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .chat-h i { width: 2.2em; height: 2.2em; border-radius: 50%; background: linear-gradient(135deg, var(--c), var(--c2)); }
+  .chat-h b { font-size: .95em; } .chat-h span { display: block; font-size: .7em; color: #30d158; }
+  .msgs { display: flex; flex-direction: column; gap: .45em; }
+  .bub { max-width: 78%; padding: .6em .85em; border-radius: 1.1em; font-size: .78em; line-height: 1.35; background: rgba(255,255,255,.08); }
+  .bub.me { align-self: flex-end; background: var(--c); color: #000; font-weight: 600; border-bottom-right-radius: .3em; }
+  .bub.them { border-bottom-left-radius: .3em; }
+  .typing { display: flex; gap: .25em; padding: .7em .9em; border-radius: 1.1em; background: rgba(255,255,255,.08); width: fit-content; }
+  .typing i { width: .4em; height: .4em; border-radius: 50%; background: #fff; opacity: .5; animation: tp 1.2s infinite; } .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+  @keyframes tp { 50% { opacity: 1; transform: translateY(-2px); } }
+  .input { margin-top: auto; display: flex; gap: .5em; } .input span { flex: 1; padding: .8em 1em; border-radius: 99px; background: rgba(255,255,255,.07); font-size: .75em; color: rgba(255,255,255,.4); } .input i { width: 2.4em; height: 2.4em; border-radius: 50%; background: var(--c); }
+
+  /* ========== WEB WORK (laptop) ========== */
+  section { padding: 130px 0 0; }
+  .web-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 50px; align-items: center; }
+  .web-tabs { display: flex; flex-direction: column; gap: 10px; }
+  .web-tab { text-align: left; padding: 20px; border-radius: 20px; border: 1px solid var(--line); background: rgba(255,255,255,.02); transition: .3s; }
+  .web-tab:hover { border-color: var(--line-hi); }
+  .web-tab.on { background: var(--panel); border-color: color-mix(in srgb, var(--c) 60%, transparent); box-shadow: 0 20px 50px -30px var(--c); }
+  .web-tab .top { display: flex; justify-content: space-between; align-items: center; }
+  .web-tab h4 { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+  .web-tab .go { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.06); transition: .3s; }
+  .web-tab.on .go { background: var(--c); color: #000; }
+  .web-tab .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s; }
+  .web-tab.on .more { grid-template-rows: 1fr; }
+  .web-tab .more > div { overflow: hidden; }
+  .web-tab .more .tags { padding-top: 14px; }
+  .web-tab .kp { display: flex; gap: 20px; padding-top: 14px; } .web-tab .kp b { display: block; font-size: 18px; } .web-tab .kp span { font-size: 11px; color: var(--muted); }
+
+  .mac { position: relative; }
+  .mac .lid { border-radius: 18px 18px 0 0; padding: 12px 12px 0; background: linear-gradient(#2c2e35, #1a1b20); box-shadow: 0 0 0 1.5px #3c3f48 inset, 0 40px 90px -30px var(--glow); }
+  .mac .disp { aspect-ratio: 16/10; border-radius: 8px 8px 0 0; overflow: hidden; background: #0b0c10; position: relative; }
+  .mac .bottom { height: 16px; margin: 0 -6%; border-radius: 0 0 16px 16px; background: linear-gradient(#3a3d45, #1c1d22); position: relative; }
+  .mac .bottom::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 16%; height: 6px; border-radius: 0 0 8px 8px; background: #15161a; }
+  .web-screen { position: absolute; inset: 0; opacity: 0; transform: scale(1.03); transition: .6s cubic-bezier(.2,.8,.2,1); font-size: clamp(7px, 1vw, 12px); }
+  .web-screen.on { opacity: 1; transform: none; }
+  .web-screen img { width: 100%; height: 100%; object-fit: cover; }
+  .browser-bar { height: 2.6em; display: flex; align-items: center; gap: .5em; padding: 0 1em; background: #15171d; border-bottom: 1px solid var(--line); }
+  .browser-bar i { width: .8em; height: .8em; border-radius: 50%; background: #2d3039; }
+  .browser-bar em { margin: 0 auto; width: 32%; height: 1.4em; border-radius: .5em; background: #0f1015; font-style: normal; font-size: .85em; color: var(--muted); display: grid; place-items: center; }
+  .wb { padding: 1.4em; height: calc(100% - 2.6em); display: grid; gap: 1em; }
+  /* web: store */
+  .w-shop { grid-template-rows: auto 1fr auto; }
+  .w-nav { display: flex; justify-content: space-between; align-items: center; } .w-nav b { font-weight: 800; font-size: 1.3em; } .w-nav span { display: flex; gap: 1em; } .w-nav span i { width: 3em; height: .7em; border-radius: 3px; background: #2a2d36; }
+  .w-hero { border-radius: 1em; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; background: linear-gradient(120deg, color-mix(in srgb, var(--c) 30%, #111), #111); }
+  .w-hero > div:first-child { padding: 1.6em; display: grid; align-content: center; gap: .6em; }
+  .w-hero .l { height: 1.4em; border-radius: 4px; background: #fff; } .w-hero .l.s { width: 60%; height: .7em; background: rgba(255,255,255,.4); } .w-hero .b { width: 7em; height: 2.2em; border-radius: .6em; background: var(--c); margin-top: .4em; }
+  .w-hero .img { background: radial-gradient(circle at 50% 55%, var(--c2) 0 28%, transparent 29%), radial-gradient(circle at 50% 55%, rgba(255,255,255,.08) 0 40%, transparent 41%); }
+  .w-prods { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8em; } .w-prods i { height: 5em; border-radius: .8em; background: #16181f; border: 1px solid var(--line); }
+  /* web: dashboard */
+  .w-dash { grid-template-columns: 9em 1fr; padding: 0; gap: 0; }
+  .w-side { background: #0f1116; border-right: 1px solid var(--line); padding: 1.2em; display: grid; gap: .8em; align-content: start; }
+  .w-side i { height: .8em; border-radius: 3px; background: #22252e; } .w-side i:first-child { height: 1.4em; width: 70%; background: var(--c); }
+  .w-main { padding: 1.2em; display: grid; grid-template-rows: auto 1fr; gap: 1em; }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8em; }
+  .kpis div { padding: .9em; border-radius: .8em; background: #13151b; border: 1px solid var(--line); }
+  .kpis b { display: block; font-size: 1.5em; font-weight: 800; } .kpis span { font-size: .8em; color: #30d158; }
+  .chart { border-radius: .8em; background: #13151b; border: 1px solid var(--line); padding: 1em; display: flex; align-items: flex-end; gap: .6em; }
+  .chart i { flex: 1; border-radius: .3em .3em 0 0; background: linear-gradient(var(--c), color-mix(in srgb, var(--c) 20%, transparent)); }
+  /* web: booking */
+  .w-book { grid-template-columns: 1fr 1.4fr; }
+  .cal { border-radius: 1em; background: #13151b; border: 1px solid var(--line); padding: 1em; display: grid; grid-template-columns: repeat(7, 1fr); gap: .35em; align-content: start; }
+  .cal i { aspect-ratio: 1; border-radius: .4em; background: #1b1e26; } .cal i.on { background: var(--c); } .cal i.b { background: color-mix(in srgb, var(--c) 30%, #1b1e26); }
+  .slots { display: grid; gap: .6em; align-content: start; }
+  .slots div { height: 3em; border-radius: .7em; background: #13151b; border: 1px solid var(--line); display: flex; align-items: center; padding: 0 1em; gap: .8em; }
+  .slots div i { width: 2em; height: 2em; border-radius: 50%; background: #262a34; } .slots div b { height: .7em; width: 40%; border-radius: 3px; background: #2a2d36; }
+  .slots div.on { border-color: var(--c); } .slots div.on i { background: var(--c); }
+
+  /* ========== STACK (dock) ========== */
+  .dock-wrap { display: grid; place-items: center; }
+  .dock { display: flex; align-items: flex-end; gap: 10px; padding: 12px; border-radius: 26px; background: rgba(255,255,255,.05); backdrop-filter: blur(20px); border: 1px solid var(--line-hi); height: 92px; }
+  .dock-i { position: relative; width: 62px; height: 62px; border-radius: 16px; display: grid; place-items: center; font-family: var(--mono); font-weight: 600; font-size: 15px; color: var(--c);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--c) 30%, #1c1f28), #12141a); border: 1px solid rgba(255,255,255,.1);
+    transform-origin: bottom center; transition: transform .15s ease-out; flex: none; }
+  .dock-i span { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--text); background: rgba(30,32,40,.95); padding: 5px 10px; border-radius: 8px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .dock-i:hover span { opacity: 1; }
+  .dock-sep { width: 1px; height: 54px; background: var(--line-hi); align-self: center; flex: none; }
+  .stack-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 46px; }
+  .cat-card { padding: 22px; border-radius: 24px; background: var(--panel); border: 1px solid var(--line); }
+  .cat-card h4 { font-size: 18px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .cat-card h4 i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+
+  /* ========== SERVICES (widgets) ========== */
+  .widgets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .widget { aspect-ratio: 1; padding: 22px; border-radius: 30px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--c) 22%, var(--panel)), var(--panel) 70%); border: 1px solid var(--line); transition: transform .3s; }
+  .widget:hover { transform: translateY(-6px) scale(1.01); }
+  .widget .w-ic { width: 52px; height: 52px; border-radius: 15px; background: var(--c); display: grid; place-items: center; font-size: 24px; box-shadow: 0 10px 30px -8px var(--c); }
+  .widget h4 { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+  .widget p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ========== CONTACT (lock screen) ========== */
+  .contact-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 50px; align-items: center; padding-bottom: 60px; }
+  .contact-grid h2 { font-size: clamp(44px, 6vw, 84px); font-weight: 800; letter-spacing: -0.05em; line-height: .95; }
+  .c-list { display: grid; gap: 10px; margin-top: 32px; max-width: 460px; }
+  .c-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); transition: .25s; }
+  .c-row:hover { border-color: var(--line-hi); transform: translateX(6px); }
+  .c-row .ic { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; font-size: 20px; background: var(--c); }
+  .c-row b { display: block; font-size: 16px; } .c-row span { font-size: 12px; color: var(--muted); }
+  .c-row .arr { margin-left: auto; color: var(--muted); }
+  .lock-stage { display: grid; place-items: center; perspective: 1400px; }
+  .lock-stage .iphone { --w: 290px; transform: rotateY(12deg) rotateX(4deg); }
+  .lock { background: radial-gradient(120% 70% at 50% 0%, #4a3aa8, #171233 50%, #07060d); align-items: center; padding-top: 17%; gap: .2em; }
+  .lock .d { font-size: .9em; font-weight: 600; opacity: .8; }
+  .lock .t { font-size: 4.4em; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+  .notifs { width: 100%; margin-top: auto; display: grid; gap: .5em; padding-bottom: 8%; }
+  .notif { display: flex; gap: .6em; align-items: flex-start; padding: .8em; border-radius: 1.2em; background: rgba(255,255,255,.14); backdrop-filter: blur(16px); opacity: 0; transform: translateY(20px) scale(.96); transition: .6s cubic-bezier(.2,.8,.2,1); }
+  .notif.in { opacity: 1; transform: none; }
+  .notif i { flex: none; width: 2.2em; height: 2.2em; border-radius: .6em; display: grid; place-items: center; font-style: normal; font-size: 1em; background: var(--c); }
+  .notif b { font-size: .8em; display: flex; justify-content: space-between; } .notif b small { font-weight: 500; opacity: .6; }
+  .notif p { font-size: .75em; opacity: .85; margin-top: .15em; line-height: 1.3; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--muted); }
+  footer .soc { display: flex; gap: 18px; } footer .soc a:hover { color: var(--text); }
+
+  .rv { opacity: 0; transform: translateY(36px); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 1000px) {
+    .nav-links { display: none; }
+    .hero-grid, .web-grid, .contact-grid { grid-template-columns: 1fr; }
+    .hero-stage { height: 560px; }
+    .sticky { grid-template-columns: 1fr; grid-template-rows: auto auto auto; gap: 14px; align-content: center; padding-top: 70px; }
+    .sc-head { position: static; }
+    .sc-head h2 { font-size: 24px; }
+    .sc-phone { --w: min(46vw, 210px); justify-self: center; }
+    .list { display: none; }
+    .info { height: 190px; }
+    .info-item { align-items: center; text-align: center; gap: 10px; }
+    .info-item .app-icon { width: 46px; height: 46px; font-size: 20px; border-radius: 13px; }
+    .info-item h3 { font-size: 26px; }
+    .info-item .rating, .info-item .stores { display: none; }
+    .info-item .tags { justify-content: center; }
+    .dots { display: flex; gap: 6px; justify-content: center; position: absolute; bottom: 20px; left: 0; right: 0; }
+    .dots i { width: 6px; height: 6px; border-radius: 6px; background: rgba(255,255,255,.25); transition: .3s; } .dots i.on { width: 22px; background: var(--text); }
+    .widgets, .stack-cats { grid-template-columns: 1fr 1fr; }
+    .dock { flex-wrap: wrap; height: auto; justify-content: center; max-width: 100%; }
+    .dock-sep { display: none; }
+  }
+  @media (max-width: 560px) {
+    .hero-stage .iphone, .lock-stage .iphone { --w: 240px; }
+    .orbit { font-size: 11px; padding: 8px 10px 8px 8px; } .orbit .ic { width: 26px; height: 26px; }
+    .o2 { right: 0; }
+    .widget { aspect-ratio: auto; min-height: 170px; }
+    .stack-cats { grid-template-columns: 1fr; }
+    .dock-i { width: 50px; height: 50px; font-size: 13px; border-radius: 13px; }
+    section { padding-top: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="ambient"></div>
+
+<nav>
+  <a href="#" class="brand"><span class="app-ic">PP</span>Pejay Paronable</a>
+  <div class="nav-links"><a href="#apps">Apps</a><a href="#web">Web</a><a href="#stack">Stack</a><a href="#services">Services</a></div>
+  <a href="#contact" class="btn pri">Hire me</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="rv">
+      <div class="eyebrow"><b>OPEN</b> Taking new projects</div>
+      <h1>Apps that live in<br/><span class="g">your pocket.</span></h1>
+      <p class="lead"><b>Pejay Paronable</b> — Full Stack Developer building React Native apps & Next.js web.</p>
+      <div class="cta">
+        <a href="#apps" class="btn pri lg">Explore apps ↓</a>
+        <a href="#contact" class="btn sec lg">Let's talk</a>
+      </div>
+      <div class="store-row">
+        <div><b>12</b><span>Apps on stores</span></div>
+        <div><b>40+</b><span>Projects</span></div>
+        <div><b>5+</b><span>Years</span></div>
+        <div><b>4.8★</b><span>Avg rating</span></div>
+      </div>
+    </div>
+
+    <div class="hero-stage rv" id="heroStage">
+      <div class="iphone" id="heroPhone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="sb"><span class="clk">9:41</span><span class="r">●●● <i></i></span></div>
+          <div class="app profile">
+            <!-- YOUR PHOTO: put profile.jpg next to this HTML file -->
+            <div class="avatar"><div>PP<img src="profile.jpg" alt="Pejay Paronable" onerror="this.remove()" /></div></div>
+            <div class="nm">Pejay Paronable</div>
+            <div class="sub">Full Stack Developer</div>
+            <div class="pstats"><div><b>40+</b><span>Projects</span></div><div><b>12</b><span>Apps</span></div><div><b>5y</b><span>Exp</span></div></div>
+            <div class="pbtns"><span>Hire</span><span>Message</span></div>
+            <div class="pgrid">
+              <i style="background:linear-gradient(135deg,#30d158,#0a84ff)"></i><i style="background:linear-gradient(135deg,#ff9f0a,#ff375f)"></i><i style="background:linear-gradient(135deg,#b56bff,#5b8cff)"></i>
+              <i style="background:linear-gradient(135deg,#5b8cff,#00e0ff)"></i><i style="background:linear-gradient(135deg,#ff6b9d,#b56bff)"></i><i style="background:linear-gradient(135deg,#ffd60a,#ff9f0a)"></i>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+      </div>
+      <div class="orbit o1"><span class="ic" style="--c:#61dafb">RN</span><div>React Native<small>iOS + Android</small></div></div>
+      <div class="orbit o2"><span class="ic" style="--c:#ffffff">N</span><div>Next.js<small>Web apps</small></div></div>
+      <div class="orbit o3"><span class="ic" style="--c:#30d158">✓</span><div>Shipped to stores<small>App Store · Play</small></div></div>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE APPS — scroll showcase -->
+<div class="showcase" id="apps">
+  <div class="sticky">
+    <div class="sc-head"><span class="mono muted">MOBILE APPS · SCROLL</span><h2>Built with React Native</h2></div>
+    <div class="info" id="info"></div>
+    <div class="iphone sc-phone" id="scPhone">
+      <div class="screen" id="scScreen">
+        <div class="island"></div>
+        <div class="sb"><span class="clk">9:41</span><span class="r">●●● <i></i></span></div>
+        <div class="home-ind"></div>
+      </div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<!-- WEB -->
+<section id="web">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="mono">WEB · NEXT.JS</span><h2>On the big screen <span>too.</span></h2></div>
+    <div class="web-grid">
+      <div class="web-tabs rv" id="webTabs"></div>
+      <div class="mac rv">
+        <div class="lid"><div class="disp" id="disp"></div></div>
+        <div class="bottom"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="mono">TECH STACK</span><h2>My dock. <span>Daily tools.</span></h2></div>
+    <div class="dock-wrap rv"><div class="dock" id="dock"></div></div>
+    <div class="stack-cats" id="cats"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="mono">SERVICES</span><h2>What I build <span>for you.</span></h2></div>
+    <div class="widgets">
+      <div class="widget rv" style="--c:#5b8cff"><div class="w-ic">📱</div><div><h4>Mobile Apps</h4><p>iOS & Android · one codebase</p></div></div>
+      <div class="widget rv" style="--c:#b56bff"><div class="w-ic">🖥️</div><div><h4>Web Apps</h4><p>Next.js · SaaS · Dashboards</p></div></div>
+      <div class="widget rv" style="--c:#30d158"><div class="w-ic">⚙️</div><div><h4>Backend & APIs</h4><p>Auth · DB · Realtime</p></div></div>
+      <div class="widget rv" style="--c:#ff9f0a"><div class="w-ic">🚀</div><div><h4>Launch</h4><p>Store release · Deploy · Support</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap contact-grid">
+    <div class="rv">
+      <span class="mono muted">CONTACT</span>
+      <h2 style="margin-top:14px">Your app<br/><span style="background:linear-gradient(100deg,#5b8cff,#b56bff,#ff6b9d);-webkit-background-clip:text;background-clip:text;color:transparent">is next.</span></h2>
+      <div class="c-list">
+        <a class="c-row" href="mailto:pjparonable@gmail.com" style="--c:#5b8cff"><span class="ic">✉️</span><div><b>pjparonable@gmail.com</b><span>Email</span></div><span class="arr">→</span></a>
+        <a class="c-row" href="https://wa.me/966544773176" target="_blank" style="--c:#30d158"><span class="ic">💬</span><div><b>WhatsApp</b><span>+966 54 477 3176</span></div><span class="arr">→</span></a>
+        <a class="c-row" href="tel:+966544773176" style="--c:#ff9f0a"><span class="ic">📞</span><div><b>Call me</b><span>+966 54 477 3176</span></div><span class="arr">→</span></a>
+      </div>
+    </div>
+    <div class="lock-stage rv">
+      <div class="iphone">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="sb"><span></span><span class="r">●●● <i></i></span></div>
+          <div class="app lock">
+            <div class="d" id="lockDate">Sunday, 11 October</div>
+            <div class="t clk">9:41</div>
+            <div class="notifs" id="notifs">
+              <div class="notif" style="--c:#5b8cff"><i>✉️</i><div><b>Mail <small>now</small></b><p>New project request — "Can you build our app?"</p></div></div>
+              <div class="notif" style="--c:#30d158"><i>💬</i><div><b>WhatsApp <small>1m</small></b><p>Pejay: Sure! Let's schedule a quick call 🚀</p></div></div>
+              <div class="notif" style="--c:#ff9f0a"><i>🏪</i><div><b>App Store <small>2m</small></b><p>Your app is now live on the App Store.</p></div></div>
+            </div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <footer class="mono">
+      <span>© 2026 PEJAY PARONABLE</span>
+      <div class="soc"><a href="#">GITHUB</a><a href="#">LINKEDIN</a><a href="#">X</a><a href="#">CV ↓</a></div>
+    </footer>
+  </div>
+</section>
+
+<script>
+  // ================= EDIT YOUR DATA HERE =================
+  // screen: 'fitness' | 'ride' | 'food' | 'chat'  (placeholder UI)
+  // img: 'screens/fittrack.png' → use a real screenshot instead (portrait, ~1170×2532)
+  const APPS = [
+    { name: 'FitTrack', emoji: '🏃', cat: 'Health & Fitness', c: '#30d158', c2: '#0a84ff', screen: 'fitness', img: '',
+      rating: '4.8★', dl: '10k+', ver: 'iOS · Android', tech: ['React Native', 'Expo', 'HealthKit', 'Firebase'], ios: '#', android: '#' },
+    { name: 'RideNow', emoji: '🚗', cat: 'Travel & Transport', c: '#ffd60a', c2: '#ff9f0a', screen: 'ride', img: '',
+      rating: '4.7★', dl: '5k+', ver: 'iOS · Android', tech: ['React Native', 'Maps', 'Socket.io', 'Node.js'], ios: '#', android: '#' },
+    { name: 'Foodie', emoji: '🍔', cat: 'Food & Delivery', c: '#ff9f0a', c2: '#ff375f', screen: 'food', img: '',
+      rating: '4.9★', dl: '8k+', ver: 'iOS · Android', tech: ['React Native', 'Stripe', 'Redux', 'Express'], ios: '#', android: '#' },
+    { name: 'Chatly', emoji: '💬', cat: 'Social', c: '#5b8cff', c2: '#b56bff', screen: 'chat', img: '',
+      rating: '4.6★', dl: '3k+', ver: 'iOS · Android', tech: ['React Native', 'Supabase', 'Realtime', 'Push'], ios: '#', android: '#' },
+  ];
+
+  // screen: 'shop' | 'dash' | 'book'  — or set img for a real screenshot (16:10)
+  const WEB = [
+    { name: 'ShopFlow', url: 'shopflow.com', c: '#b56bff', c2: '#ff6b9d', screen: 'shop', img: '',
+      tech: ['Next.js', 'Stripe', 'Prisma', 'Tailwind'], k: [['98', 'Lighthouse'], ['2.1k', 'Users']], live: '#' },
+    { name: 'Pulse Analytics', url: 'pulse.app', c: '#5b8cff', c2: '#00e0ff', screen: 'dash', img: '',
+      tech: ['Next.js', 'tRPC', 'PostgreSQL', 'Charts'], k: [['50ms', 'API avg'], ['99.9%', 'Uptime']], live: '#' },
+    { name: 'ClinicBook', url: 'clinicbook.io', c: '#30d158', c2: '#5b8cff', screen: 'book', img: '',
+      tech: ['Next.js', 'Node.js', 'MongoDB', 'Auth'], k: [['1.2k', 'Bookings/mo'], ['3', 'Clinics']], live: '#' },
+  ];
+
+  const STACK = [
+    ['Frontend', '#5b8cff', [['React','Re','#61dafb'],['Next.js','N','#ffffff'],['TypeScript','TS','#3178c6'],['Tailwind','Tw','#38bdf8']]],
+    ['Mobile',   '#b56bff', [['React Native','RN','#61dafb'],['Expo','Ex','#e5e5ea'],['Reanimated','Ra','#b56bff']]],
+    ['Backend',  '#30d158', [['Node.js','No','#5fa04e'],['PostgreSQL','Pg','#4f8fd6'],['MongoDB','Mg','#47a248'],['Firebase','Fb','#ffca28']]],
+    ['DevOps',   '#ff9f0a', [['Docker','Dk','#2496ed'],['AWS','Aw','#ff9900'],['Vercel','▲','#ffffff'],['Git','Gt','#f05032']]],
+  ];
+  // =======================================================
+
+  const $ = s => document.querySelector(s);
+  const tab = n => `<div class="tabbar">${[0,1,2,3].map(i => `<i class="${i===n?'on':''}"></i>`).join('')}</div>`;
+
+  const SCREENS = {
+    fitness: a => `<div class="sub">Today</div><h5>Activity</h5>
+      <div class="rings"><svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" stroke="rgba(255,55,95,.2)"/><circle cx="60" cy="60" r="50" stroke="#ff375f" stroke-dasharray="314" stroke-dashoffset="70" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="38" stroke="rgba(48,209,88,.2)"/><circle cx="60" cy="60" r="38" stroke="#30d158" stroke-dasharray="239" stroke-dashoffset="40" transform="rotate(-90 60 60)"/>
+        <circle cx="60" cy="60" r="26" stroke="rgba(10,132,255,.2)"/><circle cx="60" cy="60" r="26" stroke="#0a84ff" stroke-dasharray="163" stroke-dashoffset="50" transform="rotate(-90 60 60)"/>
+      </svg></div>
+      <div class="two"><div class="card-a"><b>8,240</b><span>Steps</span></div><div class="card-a"><b>540</b><span>kcal</span></div></div>
+      <div class="card-a"><div class="sub" style="margin-bottom:.5em">This week</div><div class="bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i class="hi" style="height:90%"></i><i style="height:70%"></i><i style="height:30%"></i><i style="height:55%"></i></div></div>
+      ${tab(0)}`,
+    ride: a => `<div class="map"><svg viewBox="0 0 100 200" preserveAspectRatio="none"><path class="route" d="M20 40 L20 90 L66 90 L66 140"/><circle cx="20" cy="40" r="4" fill="#fff"/><circle cx="66" cy="140" r="5" fill="${a.c}"/></svg></div>
+      <div class="sheet"><div class="grab"></div><div class="driver"><i></i><div><b>Ahmed · Camry</b><span>3 min away · 4.9★</span></div><em>SAR 24</em></div><div class="cta-a">Confirm ride</div></div>`,
+    food: a => `<div class="sub">Deliver to · Home ▾</div><h5>Hungry?</h5><div class="search">🔍  Search food…</div>
+      <div class="pills"><span>Burgers</span><span>Pizza</span><span>Sushi</span></div>
+      <div class="dish"><div class="img"></div><div class="t">Smash Burger<span>SAR 32</span></div></div>
+      <div class="dish"><div class="img" style="filter:hue-rotate(40deg)"></div><div class="t">Pepperoni Pizza<span>SAR 45</span></div></div>
+      ${tab(0)}`,
+    chat: a => `<div class="chat-h"><i></i><div><b>Design Team</b><span>● 4 online</span></div></div>
+      <div class="msgs"><div class="bub them">Is the new build ready? 👀</div><div class="bub me">Yes! Pushed to TestFlight 🚀</div><div class="bub them">Animations look so smooth</div><div class="bub me">Reanimated 3 ✨</div><div class="typing"><i></i><i></i><i></i></div></div>
+      <div class="input"><span>Message…</span><i></i></div>`,
+  };
+
+  const WEB_SCREENS = {
+    shop: p => `<div class="wb w-shop"><div class="w-nav"><b>${p.name}</b><span><i></i><i></i><i></i></span></div>
+      <div class="w-hero"><div><div class="l"></div><div class="l" style="width:80%"></div><div class="l s"></div><div class="b"></div></div><div class="img"></div></div>
+      <div class="w-prods"><i></i><i></i><i></i><i></i></div></div>`,
+    dash: p => `<div class="wb w-dash"><div class="w-side"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="w-main"><div class="kpis"><div><b>$48.2k</b><span>▲ 12%</span></div><div><b>3,921</b><span>▲ 8%</span></div><div><b>98.4%</b><span>▲ 2%</span></div></div>
+      <div class="chart">${[40,55,48,70,62,85,74,92,80,96,88,100].map(h => `<i style="height:${h}%"></i>`).join('')}</div></div></div>`,
+    book: p => `<div class="wb w-book"><div class="cal">${Array.from({length: 35}, (_, i) => `<i class="${i===17?'on':[4,9,12,22,26].includes(i)?'b':''}"></i>`).join('')}</div>
+      <div class="slots"><div><i></i><b></b></div><div class="on"><i></i><b></b></div><div><i></i><b></b></div><div><i></i><b></b></div></div></div>`,
+  };
+
+  const apple = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.6zM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.3z"/></svg>';
+  const play = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 1.8 13.8 12 3.6 22.2c-.4-.2-.6-.6-.6-1.1V2.9c0-.5.2-.9.6-1.1zm11.3 11.3 2.4 2.4-11 6.3 8.6-8.7zm3.6-3.6 2.8 1.6c.8.5.8 1.3 0 1.8l-2.8 1.6-2.6-2.5 2.6-2.5zM6.3 2.2l11 6.3-2.4 2.4-8.6-8.7z"/></svg>';
+
+  // ---- build mobile showcase ----
+  const screen = $('#scScreen');
+  APPS.forEach((a, i) => {
+    const d = document.createElement('div');
+    d.className = `app s-${a.screen}`;
+    d.style.cssText = `--c:${a.c};--c2:${a.c2};transform:translateX(${i * 105}%)`;
+    d.innerHTML = a.img ? `<img class="shot" src="${a.img}" alt="${a.name}">` : SCREENS[a.screen](a);
+    screen.insertBefore(d, screen.querySelector('.home-ind'));
+  });
+  $('#info').innerHTML = APPS.map((a, i) => `
+    <div class="info-item ${i ? '' : 'on'}" style="--c:${a.c};--c2:${a.c2}">
+      <div class="app-row"><span class="app-icon">${a.emoji}</span><div><h3>${a.name}</h3><div class="cat">${a.cat}</div></div></div>
+      <div class="rating"><div><b>${a.rating}</b><span>Rating</span></div><div><b>${a.dl}</b><span>Downloads</span></div><div><b>${a.ver}</b><span>Platforms</span></div></div>
+      <div class="tags">${a.tech.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <div class="stores"><a class="store" href="${a.ios}">${apple}App Store</a><a class="store dark" href="${a.android}">${play}Google Play</a></div>
+    </div>`).join('');
+  $('#list').innerHTML = APPS.map((a, i) => `
+    <button style="--c:${a.c};--c2:${a.c2}" data-i="${i}"><span class="mi">${a.emoji}</span><div><b>${a.name}</b><small>${a.cat}</small></div><span class="prog"></span></button>`).join('');
+  $('#dots').innerHTML = APPS.map(() => '<i></i>').join('');
+
+  const sc = $('.showcase'), phone = $('#scPhone');
+  sc.style.height = (APPS.length * 90 + 40) + 'vh';
+  const appEls = [...screen.querySelectorAll('.app')], infoEls = [...document.querySelectorAll('.info-item')],
+        listEls = [...document.querySelectorAll('#list button')], dotEls = [...document.querySelectorAll('#dots i')];
+  let current = -1;
+  function onScroll() {
+    const r = sc.getBoundingClientRect(), total = sc.offsetHeight - innerHeight;
+    const p = Math.min(Math.max(-r.top / total, 0), 0.9999);
+    const f = p * APPS.length, idx = Math.floor(f), local = f - idx;
+    if (r.top < innerHeight && r.bottom > 0) {
+      phone.style.transform = `rotateY(${(0.5 - local) * 22}deg) rotateX(${4 - local * 4}deg)`;
+      listEls.forEach((b, i) => b.querySelector('.prog').style.width = i === idx ? local * 100 + '%' : i < idx ? '100%' : '0');
+    }
+    if (idx !== current && r.top <= 0 && r.bottom >= innerHeight) {
+      current = idx;
+      appEls.forEach((el, i) => el.style.transform = `translateX(${(i - idx) * 105}%)`);
+      infoEls.forEach((el, i) => el.classList.toggle('on', i === idx));
+      listEls.forEach((el, i) => el.classList.toggle('on', i === idx));
+      dotEls.forEach((el, i) => el.classList.toggle('on', i === idx));
+      document.documentElement.style.setProperty('--glow', APPS[idx].c);
+    }
+    if (r.top > 0 && current !== -1) { current = -1; document.documentElement.style.setProperty('--glow', '#5b8cff'); }
+  }
+  listEls.forEach((b, i) => b.onclick = () => {
+    const total = sc.offsetHeight - innerHeight;
+    scrollTo({ top: sc.offsetTop + ((i + 0.3) / APPS.length) * total, behavior: 'smooth' });
+  });
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  listEls[0].classList.add('on'); dotEls[0].classList.add('on');
+
+  // ---- web projects ----
+  const disp = $('#disp');
+  disp.innerHTML = WEB.map((p, i) => `
+    <div class="web-screen ${i ? '' : 'on'}" style="--c:${p.c};--c2:${p.c2}">
+      ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<div class="browser-bar"><i></i><i></i><i></i><em>${p.url}</em></div>${WEB_SCREENS[p.screen](p)}`}
+    </div>`).join('');
+  $('#webTabs').innerHTML = WEB.map((p, i) => `
+    <button class="web-tab ${i ? '' : 'on'}" style="--c:${p.c}" data-i="${i}">
+      <div class="top"><div><span class="mono muted">${p.url}</span><h4>${p.name}</h4></div><a class="go" href="${p.live}" onclick="event.stopPropagation()">↗</a></div>
+      <div class="more"><div><div class="tags">${p.tech.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <div class="kp">${p.k.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('')}</div></div></div>
+    </button>`).join('');
+  const webTabs = [...document.querySelectorAll('.web-tab')], webScreens = [...document.querySelectorAll('.web-screen')];
+  let wIdx = 0, wTimer;
+  const setWeb = i => { wIdx = i; webTabs.forEach((t, j) => t.classList.toggle('on', i === j)); webScreens.forEach((s, j) => s.classList.toggle('on', i === j)); };
+  webTabs.forEach((t, i) => t.onclick = () => { setWeb(i); clearInterval(wTimer); });
+  wTimer = setInterval(() => setWeb((wIdx + 1) % WEB.length), 4500);
+
+  // ---- dock ----
+  const dock = $('#dock');
+  dock.innerHTML = STACK.map(([, , items], gi) =>
+    items.map(([n, a, c]) => `<div class="dock-i" style="--c:${c}">${a}<span>${n}</span></div>`).join('') + (gi < STACK.length - 1 ? '<div class="dock-sep"></div>' : '')
+  ).join('');
+  const dockItems = [...dock.querySelectorAll('.dock-i')];
+  if (matchMedia('(hover:hover) and (min-width: 1001px)').matches) {
+    dock.addEventListener('mousemove', e => dockItems.forEach(el => {
+      const r = el.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
+      el.style.transform = `scale(${1 + Math.max(0, 1 - d / 150) * 0.55})`;
+    }));
+    dock.addEventListener('mouseleave', () => dockItems.forEach(el => el.style.transform = ''));
+  }
+  $('#cats').innerHTML = STACK.map(([t, c, items]) => `
+    <div class="cat-card rv" style="--c:${c}"><h4><i></i>${t}</h4><div class="tags">${items.map(([n]) => `<span class="tag">${n}</span>`).join('')}</div></div>`).join('');
+
+  // ---- hero phone tilt ----
+  const hp = $('#heroPhone'), hs = $('#heroStage');
+  if (matchMedia('(hover:hover)').matches) {
+    hs.addEventListener('mousemove', e => {
+      const r = hs.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      hp.style.transform = `rotateY(${-16 + x * 24}deg) rotateX(${6 - y * 14}deg)`;
+    });
+    hs.addEventListener('mouseleave', () => hp.style.transform = '');
+  }
+
+  // ---- live KSA clock on phones ----
+  const tick = () => {
+    const now = new Date();
+    const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Riyadh' });
+    document.querySelectorAll('.clk').forEach(el => el.textContent = t);
+    $('#lockDate').textContent = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Asia/Riyadh' });
+  };
+  tick(); setInterval(tick, 10000);
+
+  // ---- reveal + notifications ----
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const sibs = [...e.target.parentElement.children].filter(c => c.classList.contains('rv'));
+    e.target.style.transitionDelay = (Math.max(0, sibs.indexOf(e.target)) % 5) * 80 + 'ms';
+    e.target.classList.add('in'); io.unobserve(e.target);
+  }), { threshold: 0.12 });
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+  new IntersectionObserver((es, o) => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    document.querySelectorAll('.notif').forEach((n, i) => setTimeout(() => n.classList.add('in'), 400 + i * 700));
+    o.disconnect();
+  }), { threshold: 0.4 }).observe($('#notifs'));
+</script>
+</body>
+</html>

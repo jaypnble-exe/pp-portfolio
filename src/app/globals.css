@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ---------- Theme tokens (source: design/reference.html) ---------- */
+:root {
+  --bg: #05060a;
+  --panel: #0d0f15;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-hi: rgba(255, 255, 255, 0.16);
+  --text: #f4f5f8;
+  --muted: #8b90a0;
+  --glow: #5b8cff; /* changes with the active app (useGlow) */
+
+  --blue: #5b8cff;
+  --violet: #b56bff;
+  --pink: #ff6b9d;
+  --green: #30d158;
+  --orange: #ff9f0a;
+  --yellow: #ffd60a;
+
+  --brand-gradient: linear-gradient(100deg, #5b8cff, #b56bff 50%, #ff6b9d);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-line-hi: var(--line-hi);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-glow: var(--glow);
+  --color-blue: var(--blue);
+  --color-violet: var(--violet);
+  --color-pink: var(--pink);
+  --color-green: var(--green);
+  --color-orange: var(--orange);
+  --color-yellow: var(--yellow);
+
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* reference breakpoints: 560px (small phones) and 1000px (desktop layout) */
+  --breakpoint-xs: 35rem;
+  --breakpoint-desk: 62.5rem;
+
+  --tracking-heading: -0.045em;
+  --tracking-display: -0.05em;
+  --tracking-label: 0.04em;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-dash: dash 1.2s linear infinite;
+  --animate-typing: typing 1.2s infinite;
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(36px);
+    }
+  }
+
+  @keyframes float {
+    50% {
+      translate: 0 -14px;
+    }
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -36;
+    }
+  }
+  @keyframes typing {
+    50% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+}
+
+/* ---------- Utilities ---------- */
+
+/* Mono label: JetBrains Mono, 12px, uppercase, .04em */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* Centered page column with a 16px side gutter */
+@utility site-wrap {
+  width: min(1200px, 100% - 32px);
+  margin-inline: auto;
+}
+
+/* Gradient headline words only */
+@utility text-gradient {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Ambient background ---------- */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.4;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 80%, #fff, transparent),
+    radial-gradient(1px 1px at 40% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 85% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 85%, #fff, transparent);
+  background-size: 600px 600px;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    50% 45% at 50% 40%,
+    color-mix(in srgb, var(--glow) 28%, transparent),
+    transparent 70%
+  );
+  transition: background 1s;
+}
+
+/* ---------- Devices ---------- */
+/* Everything scales from --w (the phone width). */
+@layer components {
+  .iphone {
+    position: relative;
+    flex: none;
+    width: var(--w, 300px);
+    aspect-ratio: 9 / 19.5;
+    border-radius: calc(var(--w, 300px) * 0.16);
+    padding: calc(var(--w, 300px) * 0.035);
+    background: linear-gradient(145deg, #3a3d46, #121318 40%, #2a2c33);
+    box-shadow:
+      0 0 0 1.5px #4a4d57 inset,
+      0 50px 100px -30px rgba(0, 0, 0, 0.9),
+      0 30px 80px -40px var(--glow);
+    transform-style: preserve-3d;
+  }
+  /* side buttons: volume (left, two via shadow) + power (right) */
+  .iphone::before,
+  .iphone::after {
+    content: "";
+    position: absolute;
+    width: 3px;
+    border-radius: 2px;
+    background: #2c2e35;
+  }
+  .iphone::before {
+    left: -3px;
+    top: 22%;
+    height: 9%;
+    box-shadow: 0 calc(var(--w, 300px) * 0.14) 0 #2c2e35;
+  }
+  .iphone::after {
+    right: -3px;
+    top: 28%;
+    height: 13%;
+  }
+  .iphone-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: calc(var(--w, 300px) * 0.13);
+    overflow: hidden;
+    background: #000;
+  }
+  .iphone-battery {
+    position: relative;
+    display: block;
+    width: calc(var(--w, 300px) * 0.07);
+    height: calc(var(--w, 300px) * 0.035);
+    border-radius: 3px;
+    border: 1.5px solid currentColor;
+  }
+  .iphone-battery::after {
+    content: "";
+    position: absolute;
+    inset: 1.5px 30% 1.5px 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

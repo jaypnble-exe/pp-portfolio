@@ -1,0 +1,65 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "motion/react";
+import { webProjects } from "@/data/web";
+import { cn } from "@/lib/utils";
+import { MacBook } from "@/components/device/MacBook";
+import { WebProjectScreen } from "@/components/screens/WebProjectScreen";
+import { Reveal } from "@/components/ui/Reveal";
+import { SectionHead } from "@/components/ui/SectionHead";
+import { WebTab } from "./WebTab";
+
+const ROTATE_MS = 4500;
+
+export function WebShowcase() {
+  const section = useRef<HTMLElement>(null);
+  const inView = useInView(section, { amount: 0.3 });
+  const [active, setActive] = useState(0);
+  const [pinned, setPinned] = useState(false); // user clicked a tab → stop auto-rotating
+
+  useEffect(() => {
+    if (pinned || !inView) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % webProjects.length), ROTATE_MS);
+    return () => clearInterval(id);
+  }, [pinned, inView]);
+
+  return (
+    <section id="web" ref={section} className="pt-[100px] xs:pt-[130px]">
+      <div className="site-wrap">
+        <SectionHead label="Web · Next.js" title="On the big screen" muted="too." />
+        <div className="grid items-center gap-[50px] desk:grid-cols-[1fr_1.6fr]">
+          <Reveal className="flex flex-col gap-2.5">
+            {webProjects.map((project, i) => (
+              <WebTab
+                key={project.slug}
+                project={project}
+                active={i === active}
+                onSelect={() => {
+                  setActive(i);
+                  setPinned(true);
+                }}
+              />
+            ))}
+          </Reveal>
+          <Reveal index={1}>
+            <MacBook url={webProjects[active].url}>
+              {webProjects.map((project, i) => (
+                <div
+                  key={project.slug}
+                  aria-hidden={i !== active}
+                  className={cn(
+                    "absolute inset-0 transition duration-600 ease-brand",
+                    i === active ? "opacity-100" : "scale-[1.03] opacity-0",
+                  )}
+                >
+                  <WebProjectScreen project={project} />
+                </div>
+              ))}
+            </MacBook>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,68 @@
+import type { MobileApp } from "@/lib/types";
+
+export const apps: MobileApp[] = [
+  // TODO: replace with real project
+  {
+    slug: "fittrack",
+    name: "FitTrack",
+    emoji: "🏃",
+    category: "Health & Fitness",
+    color: "#30d158",
+    color2: "#0a84ff",
+    screen: "fitness",
+    rating: "4.8★",
+    downloads: "10k+",
+    platforms: "iOS · Android",
+    tech: ["React Native", "Expo", "HealthKit", "Firebase"],
+    appStore: "#",
+    playStore: "#",
+  },
+  // TODO: replace with real project
+  {
+    slug: "ridenow",
+    name: "RideNow",
+    emoji: "🚗",
+    category: "Travel & Transport",
+    color: "#ffd60a",
+    color2: "#ff9f0a",
+    screen: "ride",
+    rating: "4.7★",
+    downloads: "5k+",
+    platforms: "iOS · Android",
+    tech: ["React Native", "Maps", "Socket.io", "Node.js"],
+    appStore: "#",
+    playStore: "#",
+  },
+  // TODO: replace with real project
+  {
+    slug: "foodie",
+    name: "Foodie",
+    emoji: "🍔",
+    category: "Food & Delivery",
+    color: "#ff9f0a",
+    color2: "#ff375f",
+    screen: "food",
+    rating: "4.9★",
+    downloads: "8k+",
+    platforms: "iOS · Android",
+    tech: ["React Native", "Stripe", "Redux", "Express"],
+    appStore: "#",
+    playStore: "#",
+  },
+  // TODO: replace with real project
+  {
+    slug: "chatly",
+    name: "Chatly",
+    emoji: "💬",
+    category: "Social",
+    color: "#5b8cff",
+    color2: "#b56bff",
+    screen: "chat",
+    rating: "4.6★",
+    downloads: "3k+",
+    platforms: "iOS · Android",
+    tech: ["React Native", "Supabase", "Realtime", "Push"],
+    appStore: "#",
+    playStore: "#",
+  },
+];
