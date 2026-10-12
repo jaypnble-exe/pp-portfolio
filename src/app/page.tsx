@@ -10,12 +10,18 @@ import { WebShowcase } from "@/components/sections/WebShowcase";
 export default function Home() {
   return (
     <>
+      <a
+        href="#main"
+        className="fixed top-4 left-4 z-70 -translate-y-24 rounded-xl bg-text px-4 py-2.5 text-sm font-bold text-black focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
+        <StackDock />
         <AppShowcase />
         <WebShowcase />
-        <StackDock />
         <Services />
         <Contact />
       </main>

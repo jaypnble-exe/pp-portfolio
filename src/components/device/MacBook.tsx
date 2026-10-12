@@ -4,16 +4,21 @@ import { cn } from "@/lib/utils";
 interface MacBookProps {
   /** Display domain shown in the browser bar. */
   url: string;
+  /** Accessible name; the screen contents are decorative and hidden. */
+  label: string;
   children: ReactNode;
   className?: string;
 }
 
 /** CSS-only laptop: lid + 16:10 display with a browser bar, base with notch. */
-export function MacBook({ url, children, className }: MacBookProps) {
+export function MacBook({ url, label, children, className }: MacBookProps) {
   return (
     // Side padding absorbs the base, which overhangs the lid by 6% on each side.
-    <div className={cn("relative px-[5.5%]", className)}>
-      <div className="rounded-t-[18px] bg-linear-to-b from-[#2c2e35] to-[#1a1b20] px-3 pt-3 shadow-[0_0_0_1.5px_#3c3f48_inset,0_40px_90px_-30px_var(--glow)]">
+    <div role="img" aria-label={label} className={cn("relative px-[5.5%]", className)}>
+      <div
+        aria-hidden="true"
+        className="rounded-t-[18px] bg-linear-to-b from-[#2c2e35] to-[#1a1b20] px-3 pt-3 shadow-[0_0_0_1.5px_#3c3f48_inset,0_40px_90px_-30px_var(--glow)]"
+      >
         <div className="relative flex aspect-16/10 flex-col overflow-hidden rounded-t-lg bg-[#0b0c10] text-[clamp(7px,1vw,12px)]">
           <div
             aria-hidden="true"

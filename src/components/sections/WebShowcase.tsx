@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "motion/react";
 import { webProjects } from "@/data/web";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import { MacBook } from "@/components/device/MacBook";
 import { WebProjectScreen } from "@/components/screens/WebProjectScreen";
@@ -17,18 +18,32 @@ export function WebShowcase() {
   const inView = useInView(section, { amount: 0.3 });
   const [active, setActive] = useState(0);
   const [pinned, setPinned] = useState(false); // user clicked a tab → stop auto-rotating
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const reduce = useReducedMotion();
+
+  // WCAG 2.2.2: pause while the user is pointing at or tabbing through it.
+  const rotating = inView && !pinned && !hovered && !focused && !reduce;
 
   useEffect(() => {
-    if (pinned || !inView) return;
+    if (!rotating) return;
     const id = setInterval(() => setActive((i) => (i + 1) % webProjects.length), ROTATE_MS);
     return () => clearInterval(id);
-  }, [pinned, inView]);
+  }, [rotating]);
 
   return (
     <section id="web" ref={section} className="pt-[100px] xs:pt-[130px]">
       <div className="site-wrap">
         <SectionHead label="Web · Next.js" title="On the big screen" muted="too." />
-        <div className="grid items-center gap-[50px] desk:grid-cols-[1fr_1.6fr]">
+        <div
+          className="grid items-center gap-[50px] desk:grid-cols-[1fr_1.6fr]"
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          onFocus={() => setFocused(true)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
+          }}
+        >
           <Reveal className="flex flex-col gap-2.5">
             {webProjects.map((project, i) => (
               <WebTab
@@ -43,7 +58,10 @@ export function WebShowcase() {
             ))}
           </Reveal>
           <Reveal index={1}>
-            <MacBook url={webProjects[active].url}>
+            <MacBook
+              url={webProjects[active].url}
+              label={`${webProjects[active].name} website on a MacBook`}
+            >
               {webProjects.map((project, i) => (
                 <div
                   key={project.slug}

@@ -3,6 +3,7 @@
 import { motion, useTransform, type MotionValue } from "motion/react";
 import type { MobileApp } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { AppIcon } from "@/components/ui/AppIcon";
 
 interface AppListProps {
   apps: MobileApp[];
@@ -27,14 +28,12 @@ export function AppList({ apps, active, progress, onSelect }: AppListProps) {
             )}
             style={{ "--c": app.color, "--c2": app.color2 }}
           >
-            <span
-              className={cn(
-                "grid size-9 place-items-center rounded-[10px] text-[17px]",
-                i === active ? "bg-linear-135 from-(--c) to-(--c2)" : "bg-white/5",
-              )}
-            >
-              {app.emoji}
-            </span>
+            <AppIcon
+              app={app}
+              px={36}
+              gradient={i === active}
+              className="size-9 rounded-[10px] text-[17px]"
+            />
             <span>
               <b className="block text-[15px]">{app.name}</b>
               <small className="text-xs">{app.category}</small>

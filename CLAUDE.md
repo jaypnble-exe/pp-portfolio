@@ -196,9 +196,8 @@ Seed `apps.ts`, `web.ts`, `stack.ts` and `services.ts` with the placeholder data
 ### 6.2 Hero — `Hero.tsx`
 - Two columns (one column under 1000px).
 - **Left:** "OPEN" green pill + "Taking new projects"; headline `Apps that live in` / gradient `your pocket.`; one-line lead; two CTAs (Explore apps ↓, Let's talk); stat row (12 apps, 40+ projects, 5+ years, 4.8★).
-- **Right:** `<IPhone>` rotated `rotateY(-16deg) rotateX(6deg)` with a gentle float animation. It tilts toward the cursor on hover-capable devices.
-  - The screen renders `<ProfileScreen>`: gradient-ring avatar using `profile.jpg` (fallback to initials), name, role, stats, Hire/Message buttons, and a 3×2 grid of gradient app tiles.
-- Three floating glass "orbit" chips around the phone: React Native, Next.js, Shipped to stores.
+- **Right:** `<HeroPortrait>`: `profile.jpg` (a monochrome side profile on black) with no frame or background. A radial mask fades its black backdrop into the page so no edge shows. No phone mockup (owner decision).
+- Three floating glass "orbit" chips around the portrait: React Native, Next.js, Shipped to stores.
 
 ### 6.3 App Showcase — `AppShowcase.tsx` (client) — **the signature section**
 - Wrapper height = `apps.length * 90vh + 40vh`. Inner container is `position: sticky; top: 0; height: 100vh`.
@@ -264,7 +263,7 @@ Seed `apps.ts`, `web.ts`, `stack.ts` and `services.ts` with the placeholder data
 ## 9. Performance checklist
 
 - Lighthouse ≥ 95 on Performance, Accessibility, Best Practices and SEO.
-- Only these are Client Components: Nav, AppShowcase, WebShowcase, StackDock, Hero phone tilt, LiveClock, Reveal, Contact notifications.
+- Only these are Client Components: Nav, AppShowcase, WebShowcase, StackDock, LiveClock, Reveal, Contact notifications.
 - Load the profile photo and first app screenshot with `priority`; lazy-load everything else.
 - Pure CSS animations (float, typing dots, dashed route) stay in CSS, not JS.
 - No layout shift: every device and image has a fixed aspect ratio.

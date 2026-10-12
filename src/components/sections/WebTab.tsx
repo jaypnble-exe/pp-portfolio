@@ -53,19 +53,24 @@ export function WebTab({ project, active, onSelect }: WebTabProps) {
         )}
       >
         <div className="overflow-hidden" inert={!active}>
+          {project.description && (
+            <p className="pt-3 text-sm leading-normal text-text/80">{project.description}</p>
+          )}
           <div className="flex flex-wrap gap-1.5 pt-3.5">
             {project.tech.map((t) => (
               <Tag key={t}>{t}</Tag>
             ))}
           </div>
-          <dl className="flex gap-5 pt-3.5">
-            {project.kpis.map(([value, label]) => (
-              <div key={label} className="flex flex-col-reverse">
-                <dt className="text-[11px] text-muted">{label}</dt>
-                <dd className="text-lg font-bold">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          {project.kpis && (
+            <dl className="flex gap-5 pt-3.5">
+              {project.kpis.map(([value, label]) => (
+                <div key={label} className="flex flex-col-reverse">
+                  <dt className="text-[11px] text-muted">{label}</dt>
+                  <dd className="text-lg font-bold">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
       </div>
     </div>

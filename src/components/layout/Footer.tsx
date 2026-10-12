@@ -30,8 +30,8 @@ export function Footer() {
             {label}
           </a>
         ))}
-        <a href={profile.cv} download className="hover:text-text">
-          CV ↓
+        <a href={profile.cv} download={profile.cvFileName} className="hover:text-text">
+          CV <span aria-hidden="true">↓</span>
         </a>
       </div>
     </footer>

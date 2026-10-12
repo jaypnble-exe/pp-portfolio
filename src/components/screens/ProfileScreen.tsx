@@ -6,9 +6,6 @@ import { profile } from "@/data/profile";
 import { webProjects } from "@/data/web";
 import { AppFrame } from "./AppFrame";
 
-// Server-only: fall back to initials until public/profile.jpg is added.
-const hasPhoto = existsSync(path.join(process.cwd(), "public", profile.photo));
-
 const STATS = [
   [profile.stats.projects, "Projects"],
   [profile.stats.apps, "Apps"],
@@ -18,6 +15,10 @@ const STATS = [
 const TILES = [...apps, ...webProjects].slice(0, 6);
 
 export function ProfileScreen() {
+  // Server-only: fall back to initials until public/profile.jpg is added.
+  // Checked per render (not at module load) so `pnpm dev` notices a newly added photo.
+  const hasPhoto = existsSync(path.join(process.cwd(), "public", profile.photo));
+
   return (
     <AppFrame className="items-center bg-[linear-gradient(180deg,#1a1f3a,#07080d_60%)] pt-[22%] text-center">
       <div className="relative aspect-square w-[42%] rounded-full bg-[conic-gradient(#5b8cff,#b56bff,#ff6b9d,#5b8cff)] p-[3px]">

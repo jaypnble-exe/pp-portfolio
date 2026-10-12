@@ -1,5 +1,6 @@
-import { ArrowRight } from "lucide-react";
-import { contacts } from "@/data/profile";
+import { ArrowRight, Download } from "lucide-react";
+import { contacts, profile } from "@/data/profile";
+import { Button } from "@/components/ui/Button";
 import { IPhone } from "@/components/device/IPhone";
 import { LockScreen } from "@/components/screens/LockScreen";
 import { Reveal } from "@/components/ui/Reveal";
@@ -39,13 +40,27 @@ export function Contact() {
               </li>
             ))}
           </ul>
+          <Button
+            href={profile.cv}
+            download={profile.cvFileName}
+            size="lg"
+            variant="accent"
+            className="mt-4 w-full max-w-[460px] justify-center"
+          >
+            <Download className="size-4" aria-hidden="true" />
+            Download my CV
+          </Button>
         </Reveal>
         <Reveal
           index={1}
           className="grid place-items-center [--lock-w:240px] perspective-[1400px] xs:[--lock-w:290px]"
         >
           <div style={{ transform: "rotateY(12deg) rotateX(4deg)", transformStyle: "preserve-3d" }}>
-            <IPhone width="var(--lock-w)" showTime={false}>
+            <IPhone
+              width="var(--lock-w)"
+              showTime={false}
+              label="iPhone lock screen with a new project request"
+            >
               <LockScreen />
             </IPhone>
           </div>

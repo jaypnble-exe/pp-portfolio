@@ -29,6 +29,7 @@ export function WebProjectScreen({ project }: WebProjectScreenProps) {
     );
   }
 
+  if (!project.screen) return null;
   const Placeholder = PLACEHOLDERS[project.screen];
   return <Placeholder name={project.name} color={project.color} color2={project.color2} />;
 }

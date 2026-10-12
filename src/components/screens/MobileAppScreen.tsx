@@ -33,6 +33,7 @@ export function MobileAppScreen({ app, preload = false }: MobileAppScreenProps) 
     );
   }
 
+  if (!app.screen) return null;
   const Placeholder = PLACEHOLDERS[app.screen];
   return <Placeholder color={app.color} color2={app.color2} />;
 }

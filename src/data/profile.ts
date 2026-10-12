@@ -1,4 +1,4 @@
-import type { ContactLink, HeroChip } from "@/lib/types";
+import type { ContactLink } from "@/lib/types";
 
 export const profile = {
   name: "Pejay Paronable",
@@ -12,17 +12,11 @@ export const profile = {
   timezone: "Asia/Riyadh",
   available: true,
   photo: "/profile.jpg", // TODO: add public/profile.jpg
-  cv: "/cv.pdf", // TODO: add public/cv.pdf
+  cv: "/cv.pdf",
+  cvFileName: "Pejay-Paronable-CV.pdf",
   stats: { apps: "12", projects: "40+", years: "5+", rating: "4.8★" },
   socials: { github: "", linkedin: "", x: "" }, // TODO: fill in
 };
-
-/** Floating glass chips orbiting the hero phone. */
-export const heroChips: HeroChip[] = [
-  { short: "RN", title: "React Native", subtitle: "iOS + Android", color: "#61dafb" },
-  { short: "N", title: "Next.js", subtitle: "Web apps", color: "#ffffff" },
-  { short: "✓", title: "Shipped to stores", subtitle: "App Store · Play", color: "#30d158" },
-];
 
 export const contacts: ContactLink[] = [
   {

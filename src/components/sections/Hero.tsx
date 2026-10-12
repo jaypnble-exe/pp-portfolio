@@ -1,7 +1,7 @@
-import { heroChips, profile } from "@/data/profile";
+import { profile } from "@/data/profile";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { ProfileScreen } from "@/components/screens/ProfileScreen";
-import { HeroPhone } from "./HeroPhone";
+import { HeroPortrait } from "./HeroPortrait";
 
 const STATS = [
   [profile.stats.apps, "Apps on stores"],
@@ -10,29 +10,7 @@ const STATS = [
   [profile.stats.rating, "Avg rating"],
 ];
 
-const CHIP_POSITIONS = [
-  "top-[14%] left-0",
-  "top-[40%] right-0 xs:-right-[2%] [animation-delay:-1.5s]",
-  "bottom-[12%] left-[6%] [animation-delay:-3s]",
-];
-
 export function Hero() {
-  const chips = heroChips.map((chip, i) => (
-    <div
-      key={chip.title}
-      className={`absolute z-3 flex animate-[float_5s_ease-in-out_infinite] items-center gap-2.5 rounded-2xl border border-line-hi bg-[rgba(18,20,28,.75)] py-2 pr-2.5 pl-2 text-[11px] font-bold whitespace-nowrap backdrop-blur-[14px] xs:py-2.5 xs:pr-3.5 xs:pl-2.5 xs:text-[13px] ${CHIP_POSITIONS[i]}`}
-      style={{ "--c": chip.color }}
-    >
-      <span className="grid size-[26px] place-items-center rounded-[10px] bg-[color-mix(in_srgb,var(--c)_18%,transparent)] font-mono text-[11px] text-(--c) xs:size-8">
-        {chip.short}
-      </span>
-      <div>
-        {chip.title}
-        <small className="block text-[11px] font-medium text-muted">{chip.subtitle}</small>
-      </div>
-    </div>
-  ));
-
   return (
     <section id="top" className="grid min-h-screen items-center pt-[120px] pb-[60px]">
       <div className="site-wrap grid items-center gap-10 desk:grid-cols-[1.1fr_1fr]">
@@ -54,7 +32,11 @@ export function Hero() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Button href="#apps" size="lg">
-              Explore apps ↓
+              Explore apps <span aria-hidden="true">↓</span>
+            </Button>
+            <Button href={profile.cv} download={profile.cvFileName} size="lg" variant="accent">
+              <Download className="size-4" aria-hidden="true" />
+              Download CV
             </Button>
             <Button href="#contact" size="lg" variant="secondary">
               Let&apos;s talk
@@ -69,9 +51,7 @@ export function Hero() {
             ))}
           </dl>
         </div>
-        <HeroPhone chips={chips}>
-          <ProfileScreen />
-        </HeroPhone>
+        <HeroPortrait />
       </div>
     </section>
   );

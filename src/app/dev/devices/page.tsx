@@ -20,15 +20,15 @@ export default function DevicesPage() {
       <section className="grid gap-6">
         <h1 className="label text-muted">Phones · 260px</h1>
         <div className="flex flex-wrap gap-10">
-          <IPhone width="260px">
+          <IPhone width="260px" label="Profile">
             <ProfileScreen />
           </IPhone>
           {apps.map((app, i) => (
-            <IPhone key={app.slug} width="260px">
+            <IPhone key={app.slug} width="260px" label={app.name}>
               <MobileAppScreen app={app} preload={i === 0} />
             </IPhone>
           ))}
-          <IPhone width="260px" showTime={false}>
+          <IPhone width="260px" showTime={false} label="Lock screen">
             <LockScreen />
           </IPhone>
         </div>
@@ -37,11 +37,11 @@ export default function DevicesPage() {
       <section className="grid gap-6">
         <h2 className="label text-muted">Scaling · 210px / 340px</h2>
         <div className="flex flex-wrap items-end gap-10">
-          <IPhone width="min(46vw, 210px)">
+          <IPhone width="min(46vw, 210px)" label={apps[0].name}>
             <MobileAppScreen app={apps[0]} />
           </IPhone>
-          <IPhone width="340px">
-            <MobileAppScreen app={apps[3]} />
+          <IPhone width="340px" label={apps[apps.length - 1].name}>
+            <MobileAppScreen app={apps[apps.length - 1]} />
           </IPhone>
         </div>
       </section>
@@ -50,7 +50,7 @@ export default function DevicesPage() {
         <h2 className="label text-muted">MacBook</h2>
         <div className="grid gap-16 lg:grid-cols-2">
           {webProjects.map((project) => (
-            <MacBook key={project.slug} url={project.url}>
+            <MacBook key={project.slug} url={project.url} label={project.name}>
               <WebProjectScreen project={project} />
             </MacBook>
           ))}

@@ -1,97 +1,87 @@
-"use client";
-
-import { Fragment, useRef, type PointerEvent } from "react";
 import { stack } from "@/data/stack";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
+import type { StackItem } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { StackLogo } from "@/components/ui/StackLogo";
 import { Tag } from "@/components/ui/Tag";
 
-const MAGNIFY_QUERY = "(hover: hover) and (min-width: 1001px)";
+// Two rows scrolling in opposite directions: Frontend + Mobile, then Backend + DevOps.
+const ROWS: StackItem[][] = [
+  stack.slice(0, 2).flatMap((g) => g.items),
+  stack.slice(2).flatMap((g) => g.items),
+];
 
+// Soft fade at both edges so pills slide in and out instead of being cut off.
+const EDGE_FADE =
+  "[mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]";
+
+/** Tech stack: CSS-only marquee rows (pause on hover) + category cards. */
 export function StackDock() {
-  const items = useRef<(HTMLLIElement | null)[]>([]);
-  const reduce = useReducedMotion();
-
-  function onMove(e: PointerEvent<HTMLUListElement>) {
-    if (reduce || e.pointerType !== "mouse" || !matchMedia(MAGNIFY_QUERY).matches) return;
-    for (const el of items.current) {
-      if (!el) continue;
-      const r = el.getBoundingClientRect();
-      const d = Math.abs(e.clientX - (r.left + r.width / 2));
-      el.style.transform = `scale(${1 + Math.max(0, 1 - d / 150) * 0.55})`;
-    }
-  }
-
-  function onLeave() {
-    for (const el of items.current) if (el) el.style.transform = "";
-  }
-
-  let n = 0;
   return (
     <section id="stack" className="pt-[100px] xs:pt-[130px]">
       <div className="site-wrap">
-        <SectionHead label="Tech stack" title="My dock." muted="Daily tools." />
-        <Reveal className="grid place-items-center">
-          <ul
-            aria-label="Tools I use"
-            onPointerMove={onMove}
-            onPointerLeave={onLeave}
-            className="flex max-w-full flex-wrap items-end justify-center gap-2.5 rounded-[26px] border border-line-hi bg-white/5 p-3 backdrop-blur-[20px] desk:h-[92px] desk:flex-nowrap"
+        <SectionHead label="Tech stack" title="My stack." muted="Daily tools." />
+      </div>
+
+      {/* Decorative: the category cards below list every tool for screen readers. */}
+      <Reveal className={cn("grid gap-3.5 overflow-hidden", EDGE_FADE)}>
+        {ROWS.map((items, i) => (
+          <MarqueeRow key={i} items={items} reverse={i % 2 === 1} />
+        ))}
+      </Reveal>
+
+      <div className="site-wrap mt-[46px] grid gap-3.5 xs:grid-cols-2 desk:grid-cols-4">
+        {stack.map((group, i) => (
+          <Reveal
+            key={group.title}
+            index={i}
+            className="rounded-3xl border border-line bg-panel p-[22px]"
           >
-            {stack.map((group, gi) => (
-              <Fragment key={group.title}>
-                {group.items.map((item) => {
-                  const idx = n++;
-                  return (
-                    <li
-                      key={item.name}
-                      ref={(el) => {
-                        items.current[idx] = el;
-                      }}
-                      className="group relative grid size-[50px] flex-none origin-bottom place-items-center rounded-[13px] border border-white/10 bg-[linear-gradient(160deg,color-mix(in_srgb,var(--c)_30%,#1c1f28),#12141a)] font-mono text-[13px] font-semibold text-(--c) transition-transform duration-150 ease-out xs:size-[62px] xs:rounded-2xl xs:text-[15px]"
-                      style={{ "--c": item.color }}
-                    >
-                      <span aria-hidden="true">{item.short}</span>
-                      <span className="pointer-events-none absolute bottom-[calc(100%+12px)] left-1/2 -translate-x-1/2 rounded-lg bg-[rgba(30,32,40,.95)] px-2.5 py-[5px] font-sans text-xs font-semibold whitespace-nowrap text-text opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                        {item.name}
-                      </span>
-                    </li>
-                  );
-                })}
-                {gi < stack.length - 1 && (
-                  <li
-                    aria-hidden="true"
-                    className="hidden h-[54px] w-px flex-none self-center bg-line-hi desk:block"
-                  />
-                )}
-              </Fragment>
-            ))}
-          </ul>
-        </Reveal>
-        <div className="mt-[46px] grid gap-3.5 xs:grid-cols-2 desk:grid-cols-4">
-          {stack.map((group, i) => (
-            <Reveal
-              key={group.title}
-              index={i}
-              className="rounded-3xl border border-line bg-panel p-[22px]"
+            <h3
+              className="mb-3.5 flex items-center gap-2.5 text-lg font-extrabold"
+              style={{ "--c": group.color }}
             >
-              <h3
-                className="mb-3.5 flex items-center gap-2.5 text-lg font-extrabold"
-                style={{ "--c": group.color }}
-              >
-                <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-(--c)" />
-                {group.title}
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {group.items.map((item) => (
-                  <Tag key={item.name}>{item.name}</Tag>
-                ))}
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              <span aria-hidden="true" className="size-2.5 rounded-[3px] bg-(--c)" />
+              {group.title}
+            </h3>
+            <div className="flex flex-wrap gap-1.5">
+              {group.items.map((item) => (
+                <Tag key={item.name}>{item.name}</Tag>
+              ))}
+            </div>
+          </Reveal>
+        ))}
       </div>
     </section>
+  );
+}
+
+function MarqueeRow({ items, reverse }: { items: StackItem[]; reverse: boolean }) {
+  // Repeat so one half is always wider than the screen, then render that half twice.
+  const half = [...items, ...items];
+
+  return (
+    <div aria-hidden="true" className="flex">
+      <ul
+        className={cn(
+          "flex w-max animate-marquee gap-3.5 pr-3.5 hover:[animation-play-state:paused] motion-reduce:animate-none",
+          reverse && "[animation-direction:reverse]",
+        )}
+      >
+        {[...half, ...half].map((item, i) => (
+          <li
+            key={i}
+            className="flex flex-none items-center gap-3 rounded-2xl border border-line-hi bg-white/4 py-2.5 pr-5 pl-2.5 backdrop-blur-[20px]"
+            style={{ "--c": item.color }}
+          >
+            <span className="grid size-11 place-items-center rounded-xl border border-white/10 bg-[linear-gradient(160deg,color-mix(in_srgb,var(--c)_30%,#1c1f28),#12141a)] font-mono text-sm font-semibold text-(--c)">
+              <StackLogo item={item} />
+            </span>
+            <span className="text-[15px] font-bold whitespace-nowrap">{item.name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

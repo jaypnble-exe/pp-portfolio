@@ -62,13 +62,15 @@ export function AppShowcase() {
           className="justify-self-center max-desk:order-2"
           style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
         >
-          <IPhone width="var(--sc-w)">
+          <IPhone width="var(--sc-w)" label={`${apps[active].name} app on an iPhone`}>
             {apps.map((app, i) => (
               <div
                 key={app.slug}
                 aria-hidden={i !== active}
                 className={cn(
                   "absolute inset-0",
+                  // Screenshots with their own status bar cover the mockup's (z-15) but stay under its island (z-20).
+                  app.screenshot && app.screenshotHasStatusBar && "z-16",
                   !reduce && "transition-transform duration-700 ease-brand",
                 )}
                 style={{ transform: `translateX(${(i - active) * 105}%)` }}

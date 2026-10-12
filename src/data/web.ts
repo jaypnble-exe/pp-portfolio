@@ -1,49 +1,65 @@
 import type { WebProject } from "@/lib/types";
 
+// Screenshots are 1440×900 captures of each live site's first screen.
 export const webProjects: WebProject[] = [
-  // TODO: replace with real project
   {
-    slug: "shopflow",
-    name: "ShopFlow",
-    url: "shopflow.com",
-    color: "#b56bff",
-    color2: "#ff6b9d",
-    screen: "shop",
-    tech: ["Next.js", "Stripe", "Prisma", "Tailwind"],
-    kpis: [
-      ["98", "Lighthouse"],
-      ["2.1k", "Users"],
-    ],
-    live: "#",
+    slug: "mand-vcard",
+    name: "MAND/VCARD",
+    url: "mandvcard.com",
+    description:
+      "Built the Next.js website and connected it with the application's backend, authentication, database, APIs, profiles, subscriptions, and other product functionality.",
+    color: "#e0303a",
+    color2: "#8f141b",
+    screenshot: "/screens/web/mand-vcard.jpg",
+    tech: ["Next.js", "Supabase", "Auth", "Subscriptions"],
+    live: "https://mandvcard.com",
   },
-  // TODO: replace with real project
   {
-    slug: "pulse-analytics",
-    name: "Pulse Analytics",
-    url: "pulse.app",
+    slug: "opic",
+    name: "OPIC",
+    url: "opic-app.com",
+    description:
+      "Production nightlife platform with a React Native mobile app. I work on the mobile UI, business features, venue/event functionality, integrations, debugging, testing, and ongoing product development.",
+    color: "#e64bd6",
+    color2: "#7c3aed",
+    screenshot: "/screens/web/opic.jpg",
+    tech: ["React Native", "Expo", "APIs", "Integrations"],
+    live: "https://opic-app.com",
+  },
+  {
+    slug: "mainway-fitness",
+    name: "Mainway Fitness",
+    url: "mainwayfitness.com",
+    description:
+      "SaaS platform built with Next.js and Supabase/PostgreSQL. Worked on authentication, permissions, database workflows, APIs, multi-client architecture, and business functionality.",
+    color: "#ffd60a",
+    color2: "#ff9f0a",
+    screenshot: "/screens/web/mainway-fitness.jpg",
+    tech: ["Next.js", "Supabase", "PostgreSQL", "Multi-client"],
+    live: "https://mainwayfitness.com",
+  },
+  {
+    slug: "revel-tours",
+    name: "Revel Tours",
+    url: "reveltours.com",
+    description:
+      "Built and maintained Next.js/Supabase functionality including database-driven features, authentication, APIs, and business workflows.",
+    color: "#ff4d2e",
+    color2: "#ffb020",
+    screenshot: "/screens/web/revel-tours.jpg",
+    tech: ["Next.js", "Supabase", "Auth", "APIs"],
+    live: "https://reveltours.com",
+  },
+  {
+    slug: "mand-vcard-profiles",
+    name: "MAND/VCARD Profiles",
+    url: "mandvcard.com/jay",
+    description:
+      "Worked on the public profile experience and the systems connecting digital profiles, user data, QR/NFC sharing, and backend services.",
     color: "#5b8cff",
-    color2: "#00e0ff",
-    screen: "dash",
-    tech: ["Next.js", "tRPC", "PostgreSQL", "Charts"],
-    kpis: [
-      ["50ms", "API avg"],
-      ["99.9%", "Uptime"],
-    ],
-    live: "#",
-  },
-  // TODO: replace with real project
-  {
-    slug: "clinicbook",
-    name: "ClinicBook",
-    url: "clinicbook.io",
-    color: "#30d158",
-    color2: "#5b8cff",
-    screen: "book",
-    tech: ["Next.js", "Node.js", "MongoDB", "Auth"],
-    kpis: [
-      ["1.2k", "Bookings/mo"],
-      ["3", "Clinics"],
-    ],
-    live: "#",
+    color2: "#e0303a",
+    screenshot: "/screens/web/mand-vcard-profile-jay.jpg",
+    tech: ["Next.js", "Supabase", "QR / NFC"],
+    live: "https://mandvcard.com/jay",
   },
 ];
