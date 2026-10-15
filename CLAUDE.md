@@ -191,7 +191,7 @@ Seed `apps.ts`, `web.ts`, `stack.ts` and `services.ts` with the placeholder data
 
 ### 6.1 Nav — `Nav.tsx` (client)
 - Floating, centered, rounded-18 bar with glass blur, fixed 14px from the top.
-- Left: gradient "PP" app icon + name. Center: Apps · Web · Stack · Services (hidden under 1000px). Right: white "Hire me" button that links to `#contact`.
+- Left: `<Logo>` (the "<//>" mark: two mirrored P's as a code tag; also the favicon via `app/icon.svg`) + name. Center: Apps · Web · Stack · Services (hidden under 1000px). Right: white "Hire me" button that links to `#contact`.
 
 ### 6.2 Hero — `Hero.tsx`
 - Two columns (one column under 1000px).
