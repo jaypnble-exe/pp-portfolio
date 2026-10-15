@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-export const DEFAULT_GLOW = "#5b8cff";
+export const DEFAULT_GLOW = "#c9566f";
 
 /** Tints the ambient light by setting --glow on <html>. `null` restores the default. */
 export function useGlow(color: string | null) {
