@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { HeroPortrait } from "./HeroPortrait";
 
 const STATS = [
-  [profile.stats.apps, "Apps on stores"],
+  [profile.stats.apps, "Apps"],
   [profile.stats.projects, "Projects"],
   [profile.stats.years, "Years"],
   [profile.stats.rating, "Avg rating"],
