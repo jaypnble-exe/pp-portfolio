@@ -48,7 +48,7 @@ export function AppShowcase() {
       className="relative"
       style={{ height: `${COUNT * 90 + 40}vh` }}
     >
-      <div className="sticky top-0 site-wrap grid h-screen content-center gap-3.5 pt-[70px] [--sc-w:min(46vw,210px)] perspective-[1600px] desk:grid-cols-[1fr_auto_1fr] desk:items-center desk:gap-[50px] desk:pt-[180px] desk:pb-5 desk:[--sc-w:clamp(220px,min(22vw,(100vh-220px)/2.17),300px)]">
+      <div className="sticky top-0 site-wrap grid h-screen content-center gap-3.5 pt-[70px] [--sc-w:min(46vw,210px)] desk:grid-cols-[1fr_auto_1fr] desk:items-center desk:gap-[50px] desk:pt-[180px] desk:pb-5 desk:[--sc-w:clamp(220px,min(22vw,(100vh-220px)/2.17),300px)]">
         <div className="text-center desk:absolute desk:inset-x-0 desk:top-24">
           <span className="label text-muted">Mobile apps · scroll</span>
           <h2 className="text-2xl font-extrabold tracking-[-0.04em] desk:text-[clamp(28px,3.4vw,42px)]">
@@ -58,28 +58,30 @@ export function AppShowcase() {
 
         <AppInfo apps={apps} active={active} />
 
-        <motion.div
-          className="justify-self-center max-desk:order-2"
-          style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
-        >
-          <IPhone width="var(--sc-w)" label={`${apps[active].name} app on an iPhone`}>
-            {apps.map((app, i) => (
-              <div
-                key={app.slug}
-                aria-hidden={i !== active}
-                className={cn(
-                  "absolute inset-0",
-                  // Screenshots with their own status bar cover the mockup's (z-15) but stay under its island (z-20).
-                  app.screenshot && app.screenshotHasStatusBar && "z-16",
-                  !reduce && "transition-transform duration-700 ease-brand",
-                )}
-                style={{ transform: `translateX(${(i - active) * 105}%)` }}
-              >
-                <MobileAppScreen app={app} preload={i === 0} />
-              </div>
-            ))}
-          </IPhone>
-        </motion.div>
+        {/* data-handoff: the intro scene's phone mockup lands exactly on this box */}
+        <div data-handoff="apps" className="justify-self-center max-desk:order-2">
+          <motion.div
+            style={{ rotateY, rotateX, transformPerspective: 1600, transformStyle: "preserve-3d" }}
+          >
+            <IPhone width="var(--sc-w)" label={`${apps[active].name} app on an iPhone`}>
+              {apps.map((app, i) => (
+                <div
+                  key={app.slug}
+                  aria-hidden={i !== active}
+                  className={cn(
+                    "absolute inset-0",
+                    // Screenshots with their own status bar cover the mockup's (z-15) but stay under its island (z-20).
+                    app.screenshot && app.screenshotHasStatusBar && "z-16",
+                    !reduce && "transition-transform duration-700 ease-brand",
+                  )}
+                  style={{ transform: `translateX(${(i - active) * 105}%)` }}
+                >
+                  <MobileAppScreen app={app} preload={i === 0} />
+                </div>
+              ))}
+            </IPhone>
+          </motion.div>
+        </div>
 
         <AppList apps={apps} active={active} progress={scrollYProgress} onSelect={scrollToApp} />
 

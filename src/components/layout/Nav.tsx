@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
 
 const LINKS = [
-  ["Stack", "#stack"],
   ["Apps", "#apps"],
   ["Web", "#web"],
+  ["Stack", "#stack"],
   ["Services", "#services"],
 ];
 

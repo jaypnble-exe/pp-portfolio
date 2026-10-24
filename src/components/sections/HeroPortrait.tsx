@@ -2,10 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import Image from "next/image";
 import { profile } from "@/data/profile";
-
-// Fades the photo's black backdrop into the page. `closest-side` makes the mask fully
-// transparent before every edge of the frame, so no straight crop line shows anywhere.
-const FADE = "radial-gradient(closest-side at 52% 42%, #000 70%, transparent)";
+import { PORTRAIT_FADE as FADE } from "@/lib/portrait";
 
 /** Hero visual: borderless portrait whose black backdrop fades into the page. */
 export function HeroPortrait() {

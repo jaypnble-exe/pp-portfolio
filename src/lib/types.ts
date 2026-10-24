@@ -53,6 +53,41 @@ export interface StackGroup {
   items: StackItem[];
 }
 
+/** A scroll-scrubbed clip pinned full-screen; frames live in public/scenes/<name>. */
+export interface SceneConfig {
+  name: string;
+  alt: string; // what happens in the clip, for screen readers
+  vh: [mobile: number, desktop: number]; // pinned section height
+  aspect: number; // frame width / height of the clip
+  mobileKeep: number; // share of the frame width kept on phones; the rest is cropped
+  hud: string; // HUD caption, e.g. "PP // Intro"
+  caption?: { label: string; text: string; at: [start: number, end: number] };
+  handoff?: SceneHandoff;
+}
+
+/**
+ * The site's own device mockup taking over from the device in a scene's clip: it fades in
+ * over the filmed device, then glides onto the matching device of the next section.
+ */
+export interface SceneHandoff {
+  device: "iphone" | "macbook";
+  target: string; // `data-handoff` value of the device it lands on
+  rotate: [y: number, x: number]; // degrees the target device starts at
+  appear: number; // scene progress where the mockup fades in
+  glide: number; // scene progress where it leaves the filmed device
+  keys: [t: number, x: number, y: number, w: number, h: number][]; // filmed screen rect (% of frame) at progress t
+}
+
+/** A card shown over the scroll-scrubbed hero clip while the scroll is inside `at`. */
+export interface HeroBeat {
+  label: string; // "01 · Mobile"
+  value: string; // "12"
+  unit: string; // "apps shipped"
+  tags: string[];
+  side: "left" | "right"; // desktop placement; the figure moves to the other side
+  at: [start: number, end: number]; // share of the pinned scroll (0–1)
+}
+
 /** Accent colors passed to placeholder screens (exposed as --c / --c2). */
 export interface AccentProps {
   color: string;

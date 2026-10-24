@@ -3,6 +3,7 @@ import { Nav } from "@/components/layout/Nav";
 import { AppShowcase } from "@/components/sections/AppShowcase";
 import { Contact } from "@/components/sections/Contact";
 import { Hero } from "@/components/sections/Hero";
+import { LaptopScene } from "@/components/sections/LaptopScene";
 import { Services } from "@/components/sections/Services";
 import { StackDock } from "@/components/sections/StackDock";
 import { WebShowcase } from "@/components/sections/WebShowcase";
@@ -19,9 +20,10 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
-        <StackDock />
         <AppShowcase />
+        <LaptopScene />
         <WebShowcase />
+        <StackDock />
         <Services />
         <Contact />
       </main>

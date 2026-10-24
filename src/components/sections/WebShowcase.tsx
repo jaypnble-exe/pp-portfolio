@@ -12,6 +12,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { WebTab } from "./WebTab";
 
 const ROTATE_MS = 4500;
+const TICK_MS = 250;
 
 export function WebShowcase() {
   const section = useRef<HTMLElement>(null);
@@ -27,7 +28,20 @@ export function WebShowcase() {
 
   useEffect(() => {
     if (!rotating) return;
-    const id = setInterval(() => setActive((i) => (i + 1) % webProjects.length), ROTATE_MS);
+    // Count only time the section is actually uncovered. While the laptop scene still covers
+    // it, hold the first project so the scene's MacBook mockup lands on the same screen.
+    let shown = 0;
+    const id = setInterval(() => {
+      if (document.querySelector("[data-scene-covering]")) {
+        shown = 0;
+        setActive(0);
+        return;
+      }
+      shown += TICK_MS;
+      if (shown < ROTATE_MS) return;
+      shown = 0;
+      setActive((i) => (i + 1) % webProjects.length);
+    }, TICK_MS);
     return () => clearInterval(id);
   }, [rotating]);
 
@@ -58,23 +72,26 @@ export function WebShowcase() {
             ))}
           </Reveal>
           <Reveal index={1}>
-            <MacBook
-              url={webProjects[active].url}
-              label={`${webProjects[active].name} website on a MacBook`}
-            >
-              {webProjects.map((project, i) => (
-                <div
-                  key={project.slug}
-                  aria-hidden={i !== active}
-                  className={cn(
-                    "absolute inset-0 transition duration-600 ease-brand",
-                    i === active ? "opacity-100" : "scale-[1.03] opacity-0",
-                  )}
-                >
-                  <WebProjectScreen project={project} />
-                </div>
-              ))}
-            </MacBook>
+            {/* data-handoff: the laptop scene's MacBook mockup lands exactly on this box */}
+            <div data-handoff="web">
+              <MacBook
+                url={webProjects[active].url}
+                label={`${webProjects[active].name} website on a MacBook`}
+              >
+                {webProjects.map((project, i) => (
+                  <div
+                    key={project.slug}
+                    aria-hidden={i !== active}
+                    className={cn(
+                      "absolute inset-0 transition duration-600 ease-brand",
+                      i === active ? "opacity-100" : "scale-[1.03] opacity-0",
+                    )}
+                  >
+                    <WebProjectScreen project={project} />
+                  </div>
+                ))}
+              </MacBook>
+            </div>
           </Reveal>
         </div>
       </div>
