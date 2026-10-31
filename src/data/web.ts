@@ -15,6 +15,18 @@ export const webProjects: WebProject[] = [
     live: "https://mandvcard.com",
   },
   {
+    slug: "mand-sa",
+    name: "MAND.SA",
+    url: "mand.sa",
+    description:
+      "Built the bilingual (English/Arabic) Next.js storefront for MAND's Saudi lifestyle brand, with the product catalog, search, customer accounts and cart running on Supabase.",
+    color: "#b3202e",
+    color2: "#8a5a3c",
+    screenshot: "/screens/web/mand-sa.jpg",
+    tech: ["Next.js", "Supabase", "E-commerce", "Arabic / RTL"],
+    live: "https://mand.sa",
+  },
+  {
     slug: "opic",
     name: "OPIC",
     url: "opic-app.com",
