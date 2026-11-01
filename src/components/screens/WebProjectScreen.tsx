@@ -17,19 +17,18 @@ interface WebProjectScreenProps {
 
 /** Real screenshot if provided, otherwise the placeholder UI for `project.screen`. */
 export function WebProjectScreen({ project }: WebProjectScreenProps) {
-  if (project.screenshot) {
-    return (
-      <Image
-        src={project.screenshot}
-        alt={`${project.name} website`}
-        fill
-        sizes="(min-width: 1000px) 720px, 100vw"
-        className="object-cover object-top"
-      />
-    );
+  if (project.screen) {
+    const Placeholder = PLACEHOLDERS[project.screen];
+    return <Placeholder name={project.name} color={project.color} color2={project.color2} />;
   }
 
-  if (!project.screen) return null;
-  const Placeholder = PLACEHOLDERS[project.screen];
-  return <Placeholder name={project.name} color={project.color} color2={project.color2} />;
+  return (
+    <Image
+      src={project.screenshot}
+      alt={project.screenshotAlt}
+      fill
+      sizes="(min-width: 1000px) 720px, 100vw"
+      className="object-cover object-top"
+    />
+  );
 }

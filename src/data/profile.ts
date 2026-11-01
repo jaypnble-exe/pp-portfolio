@@ -5,13 +5,14 @@ export const profile = {
   initials: "PP",
   role: "Full Stack Developer",
   tagline: "React Native apps & Next.js web",
+  site: "https://pejay.is-a.dev", // absolute base for share links and images
   email: "pjparonable@gmail.com",
   phone: "+966544773176",
   phoneDisplay: "+966 54 477 3176",
   whatsapp: "https://wa.me/966544773176",
   timezone: "Asia/Riyadh",
   available: true,
-  photo: "/profile.jpg", // TODO: add public/profile.jpg
+  photo: "/profile.jpg",
   cv: "/cv.pdf",
   cvFileName: "Pejay-Paronable-CV.pdf",
   stats: { apps: "12", projects: "40+", years: "5+", rating: "4.8★" },

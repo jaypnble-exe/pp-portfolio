@@ -1,7 +1,7 @@
 import type { WebProject } from "@/lib/types";
 
 // Screenshots are 1440×900 captures of each live site's first screen.
-export const webProjects: WebProject[] = [
+export const webProjects = [
   {
     slug: "mand-vcard",
     name: "MAND/VCARD",
@@ -11,6 +11,7 @@ export const webProjects: WebProject[] = [
     color: "#e0303a",
     color2: "#8f141b",
     screenshot: "/screens/web/mand-vcard.jpg",
+    screenshotAlt: "MAND/VCARD homepage introducing digital business cards",
     tech: ["Next.js", "Supabase", "Auth", "Subscriptions"],
     live: "https://mandvcard.com",
   },
@@ -23,6 +24,7 @@ export const webProjects: WebProject[] = [
     color: "#b3202e",
     color2: "#8a5a3c",
     screenshot: "/screens/web/mand-sa.jpg",
+    screenshotAlt: "MAND.SA storefront hero with patterned phone cases and bottles",
     tech: ["Next.js", "Supabase", "E-commerce", "Arabic / RTL"],
     live: "https://mand.sa",
   },
@@ -35,6 +37,7 @@ export const webProjects: WebProject[] = [
     color: "#e64bd6",
     color2: "#7c3aed",
     screenshot: "/screens/web/opic.jpg",
+    screenshotAlt: "OPIC website promoting the nightlife app",
     tech: ["React Native", "Expo", "APIs", "Integrations"],
     live: "https://opic-app.com",
   },
@@ -47,6 +50,7 @@ export const webProjects: WebProject[] = [
     color: "#ffd60a",
     color2: "#ff9f0a",
     screenshot: "/screens/web/mainway-fitness.jpg",
+    screenshotAlt: "Mainway Fitness homepage",
     tech: ["Next.js", "Supabase", "PostgreSQL", "Multi-client"],
     live: "https://mainwayfitness.com",
   },
@@ -59,6 +63,7 @@ export const webProjects: WebProject[] = [
     color: "#ff4d2e",
     color2: "#ffb020",
     screenshot: "/screens/web/revel-tours.jpg",
+    screenshotAlt: "Revel Tours homepage with rugby, football and netball tour cards",
     tech: ["Next.js", "Supabase", "Auth", "APIs"],
     live: "https://reveltours.com",
   },
@@ -71,7 +76,16 @@ export const webProjects: WebProject[] = [
     color: "#5b8cff",
     color2: "#e0303a",
     screenshot: "/screens/web/mand-vcard-profile-jay.jpg",
+    screenshotAlt: "A public MAND/VCARD digital profile page",
     tech: ["Next.js", "Supabase", "QR / NFC"],
     live: "https://mandvcard.com/jay",
   },
-];
+] satisfies WebProject[];
+
+// Types can't catch empty strings, so fail the build naming the project and field.
+for (const p of webProjects as WebProject[]) {
+  const required = { name: p.name, url: p.url, description: p.description, ...(p.screenshot ? { screenshotAlt: p.screenshotAlt } : {}) };
+  for (const [field, value] of Object.entries(required)) {
+    if (!value?.trim()) throw new Error(`web.ts: "${p.slug}" is missing ${field}`);
+  }
+}

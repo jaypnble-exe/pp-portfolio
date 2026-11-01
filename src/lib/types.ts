@@ -25,20 +25,29 @@ export interface MobileApp {
   website?: string;
 }
 
-export interface WebProject {
+interface WebProjectBase {
   slug: string;
   name: string;
   url: string; // display domain
-  description?: string; // what you built / your role
+  description: string; // what you built / your role
   color: string;
   color2: string;
-  screen?: WebScreen; // placeholder UI when there is no screenshot
-  screenshot?: string; // /screens/web/xxx.jpg (16:10, e.g. 1440×900)
   tech: string[];
   kpis?: [value: string, label: string][];
   live?: string;
   repo?: string;
 }
+
+/** A real screenshot needs alt text; without one, a placeholder UI is shown. */
+export type WebProject = WebProjectBase &
+  (
+    | {
+        screenshot: string; // /screens/web/xxx.jpg (16:10, e.g. 1440×900)
+        screenshotAlt: string; // what the screenshot shows, for screen readers
+        screen?: never;
+      }
+    | { screen: WebScreen; screenshot?: never; screenshotAlt?: never } // placeholder UI
+  );
 
 export interface StackItem {
   name: string;
